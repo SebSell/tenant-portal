@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3405 Sandy Trail — Resident Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface2:#F8FAFC;
+  --border:#E2E8F0;
+  --border2:#CBD5E1;
+  --text:#0F172A;
+  --muted:#64748B;
+  --muted2:#94A3B8;
+  --accent:#1E3A5F;
+  --accent-light:#EEF3FA;
+  --accent-mid:#3B6EA5;
+  --accent2:#2563EB;
+  --sans:'Geist','Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .25s ease both;}
+input,select,textarea,button{font-family:var(--sans);}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent2);outline-offset:1px;}
+@media(max-width:800px){
+  .nav-full{display:none!important;}
+  .grid-2{grid-template-columns:1fr!important;}
+  .grid-3{grid-template-columns:1fr!important;}
+  header{padding:0 20px!important;}
+  .page-wrap{padding:32px 20px!important;}
+  .emergency-bar{padding:12px 20px!important;}
+  footer{padding:16px 20px!important;flex-direction:column;gap:6px;}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState} = React;
+
+/* ── primitives ── */
+const Tag = ({children,color='var(--accent-mid)'}) => (
+  <span style={{fontSize:10,letterSpacing:'0.08em',textTransform:'uppercase',color,fontWeight:600,display:'block',marginBottom:8}}>{children}</span>
+);
+const H1 = ({children}) => (
+  <h1 style={{fontFamily:'var(--sans)',fontSize:'clamp(28px,4vw,44px)',fontWeight:600,lineHeight:1.15,color:'var(--text)',letterSpacing:'-0.02em'}}>{children}</h1>
+);
+const H2 = ({children,mb=20}) => (
+  <h2 style={{fontFamily:'var(--sans)',fontSize:20,fontWeight:600,lineHeight:1.3,marginBottom:mb,color:'var(--text)',letterSpacing:'-0.01em'}}>{children}</h2>
+);
+const Muted = ({children,style={}}) => (
+  <p style={{color:'var(--muted)',fontSize:13.5,lineHeight:1.7,...style}}>{children}</p>
+);
+const InfoRow = ({label,value}) => (
+  <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',padding:'10px 0',borderBottom:'1px solid var(--border)',gap:16}}>
+    <span style={{fontSize:12,color:'var(--muted)',flexShrink:0}}>{label}</span>
+    <span style={{fontSize:13,color:'var(--text)',textAlign:'right',fontWeight:500}}>{value}</span>
+  </div>
+);
+const Highlight = ({children,style={}}) => (
+  <div style={{background:'var(--accent-light)',border:'1px solid #BFCFE8',borderRadius:8,padding:'14px 18px',fontSize:12.5,color:'var(--accent)',lineHeight:1.7,...style}}>{children}</div>
+);
+const Warn = ({children}) => (
+  <div style={{background:'#FFFBEB',border:'1px solid #FCD34D',borderRadius:8,padding:'14px 18px',fontSize:12.5,color:'#92400E',lineHeight:1.7}}>{children}</div>
+);
+const Btn = ({children,href,onClick,outline=false,full=false}) => {
+  const base = {display:'inline-flex',alignItems:'center',gap:8,fontFamily:'var(--sans)',fontSize:13,
+    fontWeight:500,padding:'9px 18px',borderRadius:6,
+    textDecoration:'none',cursor:'pointer',transition:'all .15s',width:full?'100%':'auto',justifyContent:full?'center':'flex-start'};
+  const s = outline
+    ? {...base,background:'transparent',color:'var(--text)',border:'1px solid var(--border)'}
+    : {...base,background:'var(--accent)',color:'#fff',border:'none'};
+  if(href) return <a href={href} target="_blank" rel="noreferrer" style={s}>{children}</a>;
+  return <button style={s} onClick={onClick}>{children}</button>;
+};
+const Step = ({n,title,desc}) => (
+  <div style={{display:'flex',gap:14,padding:'12px 0',borderBottom:'1px solid var(--border)'}}>
+    <span style={{fontSize:13,color:'var(--muted2)',lineHeight:1.6,flexShrink:0,width:22,fontWeight:600}}>{n}.</span>
+    <div>
+      <div style={{fontSize:13,fontWeight:500,marginBottom:2,color:'var(--text)'}}>{title}</div>
+      {desc && <div style={{fontSize:12,color:'var(--muted)'}}>{desc}</div>}
+    </div>
+  </div>
+);
+const Card = ({icon,label,value,sub}) => (
+  <div style={{background:'var(--surface2)',border:'1px solid var(--border)',padding:20,borderRadius:8}}>
+    {icon && <div style={{fontSize:22,marginBottom:8}}>{icon}</div>}
+    <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',marginBottom:4,fontWeight:500}}>{label}</div>
+    <div style={{fontSize:15,fontWeight:600,color:'var(--text)'}}>{value}</div>
+    {sub && <div style={{fontSize:11,color:'var(--muted)',marginTop:3}}>{sub}</div>}
+  </div>
+);
+const PageWrap = ({children}) => (
+  <div className="page-wrap fade" style={{padding:'52px 48px',maxWidth:1140,margin:'0 auto'}}>{children}</div>
+);
+const PageHeader = ({tag,title,intro}) => (
+  <div style={{marginBottom:40,paddingBottom:32,borderBottom:'1px solid var(--border)'}}>
+    <Tag>{tag}</Tag>
+    <H1>{title}</H1>
+    {intro && <Muted style={{marginTop:10,maxWidth:580}}>{intro}</Muted>}
+  </div>
+);
+const Panel = ({children,style={}}) => (
+  <div style={{background:'var(--surface)',border:'1px solid var(--border)',padding:28,borderRadius:10,...style}}>{children}</div>
+);
+
+/* ══ PAGES ══ */
+
+function PageHome({go}) {
+  const tiles = [
+    {id:'smart-home',icon:'⚡',title:'Smart Home',desc:'Nest thermostat, Ting monitor, garage openers'},
+    {id:'pool',      icon:'🏊',title:'Pool & Spa', desc:'Pump schedule, safety rules, maintenance'},
+    {id:'hvac',      icon:'🌡️',title:'HVAC',       desc:'Filter schedule, repair process, thermostat'},
+    {id:'utilities', icon:'🔌',title:'Utilities',  desc:'Setup instructions and move-in timeline'},
+    {id:'warranty',  icon:'🛡️',title:'Home Warranty',desc:'AHS coverage and how to request repairs'},
+    {id:'emergency', icon:'🚨',title:'Emergency',  desc:'Key contacts for urgent situations'},
+    {id:'service',   icon:'🔧',title:'Service Request',desc:'Submit a maintenance request with photos'},
+  ];
+  return (
+    <PageWrap>
+      <div style={{marginBottom:52}}>
+        <Tag>Welcome, Robert &amp; Sayde</Tag>
+        <H1>Your home,<br/><em style={{fontStyle:'italic',color:'var(--accent2)'}}>at your fingertips.</em></H1>
+        <Muted style={{marginTop:12,maxWidth:500}}>Everything you need to manage 3405 Sandy Trail Lane — from the pool pump to the home warranty — all in one place.</Muted>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:2,marginBottom:52}}>
+        {[
+          {l:'Lease Start',v:'June 15, 2026'},
+          {l:'Lease End',v:'June 30, 2027'},
+          {l:'Monthly Rent',v:'$4,600'},
+          {l:'Due Date',v:'1st of month'},
+          {l:'Pay via Zelle',v:'sellam@msn.com'},
+        ].map(m=>(
+          <div key={m.l} style={{background:'var(--surface2)',border:'1px solid var(--border)',padding:'18px 22px',borderRadius:8}}>
+            <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',marginBottom:6,fontWeight:500}}>{m.l}</div>
+            <div style={{fontSize:14,fontWeight:600,color:'var(--text)'}}>{m.v}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:2}}>
+        {tiles.map(t=>(
+          <div key={t.id} onClick={()=>go(t.id)}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--accent)';e.currentTarget.style.boxShadow='0 4px 16px rgba(30,58,95,0.08)';}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.boxShadow='none';}}
+            style={{background:'var(--surface)',border:'1px solid var(--border)',padding:28,cursor:'pointer',transition:'all .2s',borderRadius:10,boxShadow:'none'}}>
+            <div style={{fontSize:28,marginBottom:12}}>{t.icon}</div>
+            <div style={{fontFamily:'var(--sans)',fontSize:16,fontWeight:600,marginBottom:6,letterSpacing:'-0.01em'}}>{t.title}</div>
+            <div style={{fontSize:12.5,color:'var(--muted)',lineHeight:1.6,marginBottom:18}}>{t.desc}</div>
+            <span style={{fontSize:12,fontWeight:500,color:'var(--accent-mid)',display:'inline-flex',alignItems:'center',gap:4}}>Go to →</span>
+          </div>
+        ))}
+      </div>
+    </PageWrap>
+  );
+}
+
+function PageSmartHome() {
+  const items = [
+    {icon:'🌡️',name:'Thermostat',sub:'Nest — Google Home app',
+     steps:['Download the Google Home app on your phone','Sign in with the account Sebastien shares with you','Control temperature, schedules, and modes remotely'],
+     link:'https://home.google.com',lbl:'Open Google Home'},
+    {icon:'🔒',name:'Security Monitor',sub:'Ting — Arc Fault Monitor',
+     steps:['Ting plugs into an outlet and monitors your electrical system','Log in at ting.com to view your home\'s arc fault status','Contact Sebastien if Ting reports any warning'],
+     link:'https://ting.com',lbl:'Open Ting Dashboard'},
+    {icon:'🚗',name:'Garage Openers',sub:'3 openers provided at move-in',
+     steps:['3 remote openers provided at move-in','Replace batteries (CR2032) if unresponsive','Do not share openers with guests without permission'],
+     link:null},
+    {icon:'💧',name:'Water Softener',sub:'Check salt level monthly',
+     steps:['Check salt level monthly','Top up with standard water softener salt pellets','Maintain appropriate chemical levels per lease Section 8.1'],
+     link:null},
+  ];
+  return (
+    <PageWrap>
+      <PageHeader tag="02 — Smart Home" title="Smart Home Controls"
+        intro="Your home includes a Nest thermostat, Ting arc fault monitor, 3-car garage, and a water softener. Use the links below to access each system." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2}}>
+        {items.map(c=>(
+          <Panel key={c.name}>
+            <div style={{fontSize:26,marginBottom:10}}>{c.icon}</div>
+            <div style={{fontSize:15,fontWeight:500,marginBottom:3}}>{c.name}</div>
+            <div style={{fontSize:11,color:'var(--muted)',marginBottom:14}}>{c.sub}</div>
+            <div style={{borderTop:'1px solid var(--border)',paddingTop:12,display:'flex',flexDirection:'column',gap:7}}>
+              {c.steps.map((s,i)=>(
+                <div key={i} style={{display:'flex',gap:8,fontSize:11,color:'var(--muted)'}}>
+                  <span style={{color:'var(--accent)',fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
+                </div>
+              ))}
+            </div>
+            {c.link && <div style={{marginTop:16}}><Btn href={c.link}>↗ {c.lbl}</Btn></div>}
+          </Panel>
+        ))}
+      </div>
+    </PageWrap>
+  );
+}
+
+function PagePool() {
+  const progs = [
+    {n:1,rpm:'1,750 RPM',time:'12:00 AM – 6:00 AM',purpose:'Main Circulation',auto:true,pct:51},
+    {n:2,rpm:'3,000 RPM',time:'3:00 PM – 4:00 PM', purpose:'Afternoon Skimming',auto:true,pct:87},
+    {n:3,rpm:'2,000 RPM',time:'1 hr on demand',     purpose:'Chemical Distribution',auto:false,pct:58},
+    {n:4,rpm:'3,450 RPM',time:'On demand',           purpose:'Spa Mode',auto:false,pct:100},
+    {n:5,rpm:'3,450 RPM',time:'6:30 AM – 7:00 AM',  purpose:'Morning Purge',auto:true,pct:100},
+  ];
+  return (
+    <PageWrap>
+      <PageHeader tag="03 — Pool &amp; Spa" title="Pool & Spa"
+        intro="The property includes an in-ground pool and spa. Tenants are responsible for day-to-day pool maintenance per Exhibit B of the lease." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:2,alignItems:'start'}}>
+
+        <div style={{display:'flex',flexDirection:'column',gap:2}}>
+          <Panel>
+            <Tag>Pump Schedule</Tag>
+            <H2>IntelliFlo Programs</H2>
+            <table style={{width:'100%',borderCollapse:'collapse',marginBottom:20}}>
+              <thead><tr>
+                {['Prog','Speed','Time','Purpose','Type'].map(h=>(
+                  <th key={h} style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',textAlign:'left',padding:'0 0 10px',borderBottom:'1px solid var(--border)',fontWeight:400}}>{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {progs.map(p=>(
+                  <tr key={p.n}>
+                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontWeight:500}}>{p.n}</td>
+                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.rpm}</td>
+                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:11,color:'var(--muted)'}}>{p.time}</td>
+                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.purpose}</td>
+                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
+                      <span style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',padding:'3px 8px',borderRadius:2,fontWeight:500,
+                        background:p.auto?'var(--accent-light)':'#FDF3E7',color:p.auto?'var(--accent)':'#9B6A35'}}>{p.auto?'Auto':'Manual'}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{display:'flex',flexDirection:'column',gap:10}}>
+              {progs.map(p=>(
+                <div key={p.n} style={{display:'flex',alignItems:'center',gap:12}}>
+                  <span style={{fontSize:11,color:'var(--muted)',width:170,flexShrink:0}}>Prog {p.n} — {p.purpose}</span>
+                  <div style={{flex:1,height:4,background:'var(--border)',borderRadius:2}}>
+                    <div style={{width:p.pct+'%',height:'100%',background:'var(--accent)',borderRadius:2}}></div>
+                  </div>
+                  <span style={{fontSize:11,fontWeight:500,width:70,textAlign:'right'}}>{p.rpm}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{marginTop:20}}><Btn outline href="https://www.pentair.com">↗ Pentair Manual</Btn></div>
+          </Panel>
+
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:2}}>
+            {[['Volume','~8,000 gal'],['Size','23.5 × 11.5 ft'],['Depth','avg 4 ft'],['Pump','176L0676']].map(([l,v])=>(
+              <Card key={l} label={l} value={v} />
+            ))}
+          </div>
+        </div>
+
+        <div style={{display:'flex',flexDirection:'column',gap:2}}>
+          <Panel>
+            <Tag>Tenant Responsibilities</Tag>
+            <H2>Per Exhibit B</H2>
+            {['Maintain proper water levels at all times','Empty and clean skimmers at least once per week','Add appropriate chemicals and maintain water balance','Operate all pool equipment properly','Prevent freezing of pipes, equipment, and pool water','Keep all pool enclosure and yard gates closed at all times'].map((r,i)=>(
+              <div key={i} style={{display:'flex',gap:10,padding:'9px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                <span style={{color:'var(--accent)',flexShrink:0}}>✓</span><span>{r}</span>
+              </div>
+            ))}
+          </Panel>
+          <Panel>
+            <Tag>Safety Rules</Tag>
+            <H2>Pool &amp; Spa Safety</H2>
+            {['Children must have an adult present at all times','No glass containers near pool or spa','No diving under any circumstances','No alcohol or drug use while using pool or spa','All pool gates must remain closed and latched'].map((r,i)=>(
+              <Step key={i} n={i+1} title={r} desc="" />
+            ))}
+          </Panel>
+        </div>
+      </div>
+    </PageWrap>
+  );
+}
+
+function PageHVAC({go}) {
+  return (
+    <PageWrap>
+      <PageHeader tag="04 — HVAC" title="HVAC & Climate"
+        intro="Your home is controlled by a Nest thermostat. Tenants handle routine maintenance; major system repairs are the landlord's responsibility." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2,alignItems:'start'}}>
+        <Panel>
+          <Tag>Responsibilities at a Glance</Tag>
+          <H2>Who Does What</H2>
+          <InfoRow label="Thermostat" value="Nest — Google Home app" />
+          <InfoRow label="HVAC filter" value="Replace when prompted — Tenant" />
+          <InfoRow label="Dryer vent cleaning" value="Every 6 months — Tenant" />
+          <InfoRow label="Refrigerator coils" value="Every 6 months — Tenant" />
+          <InfoRow label="Repairs over $150 (normal wear)" value="Landlord responsibility" />
+          <InfoRow label="All repair requests" value="Must be in writing to Sebastien" />
+          <InfoRow label="Pipe freezing prevention" value="Tenant (including vacations)" />
+          <div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:24}}>
+            <Btn href="https://home.google.com">↗ Open Nest</Btn>
+            <Btn outline onClick={()=>go('service')}>Submit Repair Request →</Btn>
+          </div>
+        </Panel>
+        <div style={{display:'flex',flexDirection:'column',gap:2}}>
+          <Warn>
+            <strong style={{display:'block',marginBottom:6}}>⚠ HVAC is NOT an emergency</strong>
+            For HVAC issues, submit a written repair request to Sebastien first. Do not call a contractor directly. HVAC is explicitly excluded from emergency status under Section 8.6 of the lease.
+          </Warn>
+          <Panel>
+            <Tag>Repair Process</Tag>
+            <H2>How to Request a Repair</H2>
+            <Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
+            <Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
+            <Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a licensed contractor within 48 hrs." />
+            <Step n={4} title="Provide access" desc="Trip charges apply if the contractor can't access." />
+          </Panel>
+        </div>
+      </div>
+    </PageWrap>
+  );
+}
+
+function PageUtilities() {
+  const utils = [
+    {icon:'⚡',name:'Electricity',sub:'Your choice · Delivered by Oncor',
+     steps:['Go to PowerToChoose.org and compare rates','Select a fixed-rate 12-month plan','Set start date to June 15, 2026','Provide SSN and address to enroll'],
+     link:'https://www.powertochoose.org',lbl:'PowerToChoose.org'},
+    {icon:'🔥',name:'Natural Gas',sub:'Atmos Energy · No choice in Plano',
+     steps:['Call 888-286-6700 or visit atmosenergy.com','Request service at 3405 Sandy Trail Ln TX 75023','Set start date to June 15, 2026','Technician may need access for meter activation'],
+     link:'https://www.atmosenergy.com',lbl:'atmosenergy.com'},
+    {icon:'💧',name:'Water & Trash',sub:'City of Plano Utility Services',
+     steps:['Call 972-769-4150','Provide lease start date and address','A deposit may be required','Confirm trash/recycling days at signup'],
+     link:'https://www.plano.gov/374/Water-Utility',lbl:'plano.gov / Water'},
+    {icon:'📡',name:'Internet',sub:'AT&T Fiber or Spectrum · Your choice',
+     steps:['AT&T Fiber is available at this address','Schedule install 1–2 weeks before move-in','Coordinate access with Sebastien if before June 15'],
+     link:'https://www.att.com/internet/',lbl:'AT&T Fiber'},
+  ];
+  const tl = [
+    {done:true, now:false,week:'Now — May 2026',         title:'Lease signed & deposit paid',       desc:'Lease executed, deposits collected.',tags:['Complete']},
+    {done:false,now:true, week:'May 19–25 (4–5 wks out)',title:'Set up electricity, gas & water',   desc:'Activate all three with a June 15 start date.',tags:['Electric','Gas','Water']},
+    {done:false,now:false,week:'May 26–Jun 1 (3–4 wks)', title:'Schedule internet installation',   desc:'Book AT&T or Spectrum — slots fill fast.',tags:['Internet']},
+    {done:false,now:false,week:'Jun 1–10 (1–2 wks)',      title:'Confirm all accounts are active',  desc:'Log in or call each provider to verify.',tags:['Verify all']},
+    {done:false,now:false,week:'Jun 15 — Move-in Day',   title:'Keys, walkthrough & Exhibit A',    desc:'Locate water shut-off and breaker panel.',tags:['Keys','Exhibit A']},
+    {done:false,now:false,week:'Jun 15–22 — First Week', title:'Set up autopay & Nest app',         desc:'Enroll in autopay, connect Google Home.',tags:['Auto-pay','Nest']},
+  ];
+  return (
+    <PageWrap>
+      <PageHeader tag="05 — Utilities" title="Utilities Setup"
+        intro="All utilities must be activated in your name before move-in on June 15, 2026." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:2,alignItems:'start'}}>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2}}>
+          {utils.map(u=>(
+            <Panel key={u.name}>
+              <div style={{fontSize:26,marginBottom:10}}>{u.icon}</div>
+              <div style={{fontSize:14,fontWeight:500,marginBottom:3}}>{u.name}</div>
+              <div style={{fontSize:11,color:'var(--muted)',marginBottom:14}}>{u.sub}</div>
+              <div style={{borderTop:'1px solid var(--border)',paddingTop:12,display:'flex',flexDirection:'column',gap:6}}>
+                {u.steps.map((s,i)=>(
+                  <div key={i} style={{display:'flex',gap:8,fontSize:11,color:'var(--muted)'}}>
+                    <span style={{color:'var(--accent)',fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
+                  </div>
+                ))}
+              </div>
+              {u.link && <div style={{marginTop:14}}><a href={u.link} target="_blank" rel="noreferrer"
+                style={{fontSize:12,color:'var(--accent-mid)',textDecoration:'none',fontWeight:500,display:'inline-flex',alignItems:'center',gap:4}}>↗ {u.lbl}</a></div>}
+            </Panel>
+          ))}
+        </div>
+
+        <Panel style={{position:'sticky',top:100}}>
+          <Tag>Move-in Countdown</Tag>
+          <H2>Setup Timeline</H2>
+          <div style={{position:'relative',paddingLeft:26}}>
+            <div style={{position:'absolute',left:6,top:8,bottom:8,width:1,background:'var(--border)'}}></div>
+            {tl.map((t,i)=>(
+              <div key={i} style={{position:'relative',paddingBottom:22}}>
+                <div style={{position:'absolute',left:-20,top:4,width:14,height:14,borderRadius:'50%',
+                  background:t.done?'var(--accent)':t.now?'var(--accent2)':'var(--surface)',
+                  border:`2px solid ${t.done?'var(--accent)':t.now?'var(--accent2)':'var(--border)'}`,
+                  display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  {(t.done||t.now) && <div style={{width:4,height:4,borderRadius:'50%',background:'white'}}></div>}
+                </div>
+                <div style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',marginBottom:2}}>{t.week}</div>
+                <div style={{fontSize:13,fontWeight:500,marginBottom:2}}>{t.title}</div>
+                <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5,marginBottom:5}}>{t.desc}</div>
+                <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+                  {t.tags.map(tag=>(
+                    <span key={tag} style={{fontSize:9,letterSpacing:'0.08em',textTransform:'uppercase',padding:'2px 7px',border:'1px solid var(--border)',borderRadius:100,color:'var(--muted)'}}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      </div>
+    </PageWrap>
+  );
+}
+
+function PageWarranty({go}) {
+  return (
+    <PageWrap>
+      <PageHeader tag="06 — Home Warranty" title="Home Warranty"
+        intro="The property is covered by American Home Shield (AHS). Always notify Sebastien in writing first — do not contact AHS directly." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2,alignItems:'start'}}>
+        <Panel>
+          <Tag>Coverage Summary</Tag>
+          <H2>What's Covered</H2>
+          {['HVAC systems (heating & cooling)','Plumbing systems','Electrical systems','Water heater','Built-in kitchen appliances','Washer & dryer','Pool & spa equipment (above-ground)'].map((c,i)=>(
+            <div key={i} style={{display:'flex',gap:10,padding:'9px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+              <span style={{color:'var(--accent)',flexShrink:0}}>✓</span><span>{c}</span>
+            </div>
+          ))}
+          <div style={{marginTop:20}}>
+            <Tag color="#9B6A35">Not Covered</Tag>
+            {['Routine maintenance (filters, bulbs, batteries)','Cosmetic items with no functional impact','Tenant-caused damage','Pre-existing conditions'].map((c,i)=>(
+              <div key={i} style={{display:'flex',gap:10,padding:'8px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                <span style={{color:'#C0392B',flexShrink:0}}>✗</span><span style={{color:'var(--muted)'}}>{c}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{marginTop:20}}>
+            <InfoRow label="Provider" value="American Home Shield" />
+            <InfoRow label="AHS phone" value="888-429-8151 (Sebastien calls)" />
+          </div>
+        </Panel>
+        <div style={{display:'flex',flexDirection:'column',gap:2}}>
+          <Panel>
+            <Tag>How it Works</Tag>
+            <H2>Repair Process</H2>
+            <Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
+            <Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
+            <Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a contractor within 48 business hours." />
+            <Step n={4} title="Provide access" desc="Coordinate with the contractor; trip charges apply if missed." />
+          </Panel>
+          <Highlight>
+            <strong>Important:</strong> Do not call AHS directly or hire an outside contractor without Sebastien's prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
+          </Highlight>
+          <div style={{display:'flex',gap:10,flexWrap:'wrap',padding:'16px 0'}}>
+            <Btn onClick={()=>go('service')}>Submit Service Request →</Btn>
+            <Btn outline href="https://www.ahs.com">↗ AHS Website</Btn>
+          </div>
+        </div>
+      </div>
+    </PageWrap>
+  );
+}
+
+function PageEmergency() {
+  const contacts = [
+    {name:'911',role:'Police · Fire · Medical',phone:'911',note:'Life-threatening emergencies only',urgent:true,href:'tel:911'},
+    {name:'Sebastien Sellam',role:'Landlord — Property Emergencies',phone:'701-866-1887',note:'sellam@msn.com · Available 24/7',urgent:true,href:'tel:7018661887'},
+    {name:'Atmos Energy',role:'Natural Gas — Emergency',phone:'800-460-3030',note:'24/7 gas emergency line',urgent:false,href:'tel:18004603030'},
+    {name:'Oncor',role:'Electric Delivery — Outage',phone:'888-888-6099',note:'Report outages or downed power lines',urgent:false,href:'tel:18888886099'},
+    {name:'City of Plano',role:'Water / Wastewater',phone:'972-769-4150',note:'Water main breaks or sewer issues',urgent:false,href:'tel:9727694150'},
+    {name:'American Home Shield',role:'Home Warranty',phone:'888-429-8151',note:'Call Sebastien first before contacting AHS',urgent:false,href:'tel:18884298151'},
+  ];
+  return (
+    <PageWrap>
+      <PageHeader tag="07 — Emergency" title="Emergency Contacts"
+        intro="Save these numbers before you need them. For life-threatening situations, always call 911 first." />
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:2,marginBottom:24}}>
+        {contacts.map(c=>(
+          <div key={c.name} style={{background:c.urgent?'#FEF2F2':'var(--surface)',
+            border:`1px solid ${c.urgent?'#FCA5A5':'var(--border)'}`,padding:28,borderRadius:10}}>
+            <div style={{fontSize:16,fontWeight:600,marginBottom:4,letterSpacing:'-0.01em'}}>{c.name}</div>
+            <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:c.urgent?'#DC2626':'var(--muted)',marginBottom:14,fontWeight:500}}>{c.role}</div>
+            <a href={c.href} style={{fontSize:18,fontWeight:700,color:'var(--accent)',textDecoration:'none',display:'block',marginBottom:6,letterSpacing:'-0.02em'}}>{c.phone}</a>
+            <div style={{fontSize:12,color:'var(--muted)'}}>{c.note}</div>
+          </div>
+        ))}
+      </div>
+      <Highlight>
+        <strong>Before move-in:</strong> Locate your main water shut-off valve (near the garage utility area) and your electrical panel (in the garage). Know how to operate both before you need them. Record their locations on Exhibit A at move-in.
+      </Highlight>
+    </PageWrap>
+  );
+}
+
+function PageService() {
+  const [files, setFiles] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [drag, setDrag] = useState(false);
+
+  const addFiles = (newFiles) => {
+    Array.from(newFiles).filter(f=>f.type.startsWith('image/')).slice(0, 5 - files.length).forEach(f => {
+      const reader = new FileReader();
+      reader.onload = e => setFiles(prev => prev.length < 5 ? [...prev, {id:Date.now()+Math.random(), src:e.target.result}] : prev);
+      reader.readAsDataURL(f);
+    });
+  };
+
+  if(submitted) return (
+    <PageWrap>
+      <div style={{maxWidth:500,margin:'40px auto',textAlign:'center'}}>
+        <div style={{fontSize:52,marginBottom:24}}>✅</div>
+        <H2>Request Submitted</H2>
+        <Muted style={{marginBottom:28}}>Sebastien has been notified and will follow up within 24 hours. For urgent issues call <strong>701-866-1887</strong> directly.</Muted>
+        <Btn onClick={()=>setSubmitted(false)}>Submit Another Request</Btn>
+      </div>
+    </PageWrap>
+  );
+
+  const inp = {fontFamily:'var(--sans)',fontSize:13,background:'#fff',border:'1px solid var(--border)',color:'var(--text)',padding:'10px 14px',borderRadius:6,width:'100%'};
+  const lbl = {fontSize:12,color:'var(--muted)',fontWeight:500,display:'block',marginBottom:6};
+
+  return (
+    <PageWrap>
+      <PageHeader tag="08 — Service Request" title="Submit a Service Request"
+        intro="For non-emergency maintenance issues only. Sebastien will respond within 24 hours. For emergencies, call 701-866-1887 directly." />
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:32,alignItems:'start'}}>
+        <form onSubmit={e=>{e.preventDefault();setSubmitted(true);}}>
+
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+            <div><label style={lbl}>Your Name</label><input required style={inp} placeholder="Robert or Sayde Agron" /></div>
+            <div><label style={lbl}>Phone / Email</label><input required style={inp} placeholder="For follow-up" /></div>
+          </div>
+
+          <div style={{marginBottom:20}}>
+            <label style={lbl}>Category</label>
+            <select required style={{...inp,appearance:'none',cursor:'pointer'}}>
+              <option value="">Select a category…</option>
+              {['Plumbing (leak, clog, no hot water)','HVAC (heating / cooling / filter)','Electrical (outlet, breaker, fixture)','Pool / Spa','Appliances (oven, fridge, dishwasher, W/D)','Garage door / openers','Doors, windows, locks','Pest / wildlife','Water heater','Other'].map(o=><option key={o}>{o}</option>)}
+            </select>
+          </div>
+
+          <div style={{marginBottom:20}}>
+            <label style={lbl}>Urgency</label>
+            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+              {[['routine','🟢 Routine'],['soon','🟡 Soon — within a week'],['urgent','🔴 Urgent — affecting daily life']].map(([v,l])=>(
+                <label key={v} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'8px 14px',border:'1px solid var(--border)',borderRadius:6,fontSize:13,cursor:'pointer',fontWeight:500,color:'var(--muted)'}}>
+                  <input type="radio" name="urgency" value={v} defaultChecked={v==='routine'} style={{accentColor:'var(--accent)'}}/>{l}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div style={{marginBottom:20}}>
+            <label style={lbl}>Description of the Problem</label>
+            <textarea required rows={5} style={{...inp,resize:'vertical',lineHeight:1.6}}
+              placeholder="Describe what's happening, when it started, and any steps already taken. The more detail, the faster we can help." />
+          </div>
+
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
+            <div><label style={lbl}>Preferred Days</label><input style={inp} placeholder="e.g. Mon–Wed" /></div>
+            <div><label style={lbl}>Preferred Hours</label><input style={inp} placeholder="e.g. 9 AM – 12 PM" /></div>
+          </div>
+
+          <div style={{marginBottom:28}}>
+            <label style={lbl}>Photos (optional · up to 5)</label>
+            <div onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)}
+              onDrop={e=>{e.preventDefault();setDrag(false);addFiles(e.dataTransfer.files);}}
+              style={{position:'relative',border:`1.5px dashed ${drag?'var(--accent2)':'var(--border)'}`,borderRadius:8,padding:28,
+                textAlign:'center',background:drag?'var(--accent-light)':'var(--surface2)',transition:'all .15s',cursor:'pointer'}}>
+              <input type="file" accept="image/*" multiple onChange={e=>addFiles(e.target.files)}
+                style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',width:'100%',height:'100%'}} />
+              <div style={{fontSize:28,marginBottom:8}}>📷</div>
+              <div style={{fontSize:13,color:'var(--muted)'}}><strong style={{color:'var(--accent-mid)'}}>Click to upload</strong> or drag & drop · JPG, PNG, HEIC · Max 5 images</div>
+            </div>
+            {files.length > 0 && (
+              <div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:12}}>
+                {files.map(f=>(
+                  <div key={f.id} style={{position:'relative',width:80,height:80,borderRadius:2,overflow:'hidden',border:'1px solid var(--border)',flexShrink:0}}>
+                    <img src={f.src} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                    <button type="button" onClick={()=>setFiles(p=>p.filter(x=>x.id!==f.id))}
+                      style={{position:'absolute',top:3,right:3,width:18,height:18,background:'rgba(0,0,0,.6)',border:'none',borderRadius:'50%',color:'white',fontSize:10,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{display:'flex',alignItems:'center',gap:16,flexWrap:'wrap'}}>
+            <Btn>Submit Request →</Btn>
+            <span style={{fontSize:11,color:'var(--muted)'}}>Sent directly to Sebastien.</span>
+          </div>
+        </form>
+
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+          <Highlight>
+            <strong>AHS reminder:</strong> For issues covered by American Home Shield, this form triggers Sebastien to file a claim. Do not call AHS directly or hire contractors without prior written approval.
+          </Highlight>
+          <Panel>
+            <div style={{fontFamily:'var(--serif)',fontSize:16,marginBottom:14}}>Need it faster?</div>
+            <InfoRow label="Call Sebastien" value="701-866-1887" />
+            <InfoRow label="Email" value="sellam@msn.com" />
+            <InfoRow label="Emergency" value="911" />
+            <InfoRow label="Atmos Gas" value="800-460-3030" />
+          </Panel>
+          <Panel>
+            <div style={{fontFamily:'var(--serif)',fontSize:16,marginBottom:14}}>Response times</div>
+            <InfoRow label="Urgent requests" value="Same day" />
+            <InfoRow label="Routine requests" value="Within 24 hrs" />
+            <InfoRow label="AHS dispatch" value="48 hrs (business hrs)" />
+          </Panel>
+        </div>
+      </div>
+    </PageWrap>
+  );
+}
+
+/* ══ SHELL ══ */
+const PAGES = [
+  {id:'home',       label:'Home'},
+  {id:'smart-home', label:'Smart Home'},
+  {id:'pool',       label:'Pool & Spa'},
+  {id:'hvac',       label:'HVAC'},
+  {id:'utilities',  label:'Utilities'},
+  {id:'warranty',   label:'Warranty'},
+  {id:'emergency',  label:'Emergency'},
+  {id:'service',    label:'Service Request'},
+];
+
+function App() {
+  const [page, setPage] = useState('home');
+  const go = id => { setPage(id); window.scrollTo({top:0,behavior:'smooth'}); };
+
+  const Page = () => {
+    switch(page) {
+      case 'home':       return <PageHome go={go} />;
+      case 'smart-home': return <PageSmartHome />;
+      case 'pool':       return <PagePool />;
+      case 'hvac':       return <PageHVAC go={go} />;
+      case 'utilities':  return <PageUtilities />;
+      case 'warranty':   return <PageWarranty go={go} />;
+      case 'emergency':  return <PageEmergency />;
+      case 'service':    return <PageService />;
+      default:           return <PageHome go={go} />;
+    }
+  };
+
+  return (
+    <div>
+      {/* HEADER */}
+      <header style={{position:'sticky',top:0,zIndex:100,background:'#fff',borderBottom:'1px solid var(--border)',
+        padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between',
+        boxShadow:'0 1px 0 var(--border)'}}>
+        <div onClick={()=>go('home')} style={{cursor:'pointer',flexShrink:0}}>
+          <div style={{fontSize:15,fontWeight:700,color:'var(--text)',letterSpacing:'-0.02em'}}>3405 Sandy Trail Lane</div>
+          <div style={{fontSize:11,color:'var(--muted)',fontWeight:400,marginTop:1}}>Resident Portal · Plano TX 75023</div>
+        </div>
+        <nav className="nav-full" style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+          {PAGES.map(p=>(
+            <button key={p.id} onClick={()=>go(p.id)}
+              style={{fontFamily:'var(--sans)',fontSize:13,fontWeight:500,
+                background:page===p.id?'var(--accent-light)':'none',
+                border:'none',cursor:'pointer',padding:'6px 12px',borderRadius:6,
+                color:page===p.id?'var(--accent)':'var(--muted)',
+                transition:'all .15s'}}>
+              {p.label}
+            </button>
+          ))}
+        </nav>
+      </header>
+
+      {/* EMERGENCY BAR */}
+      <div className="emergency-bar" style={{background:'var(--accent)',color:'#fff',padding:'11px 48px',
+        display:'flex',alignItems:'center',gap:14}}>
+        <div style={{width:7,height:7,borderRadius:'50%',background:'#FCA5A5',flexShrink:0,animation:'pulse 2s infinite'}}></div>
+        <span style={{fontSize:12,flex:1,fontWeight:400}}>
+          <strong style={{color:'#FCA5A5',fontWeight:600}}>Emergency:</strong> Sebastien — 701-866-1887 &nbsp;·&nbsp; Gas/Fire: 911 &nbsp;·&nbsp; Atmos: 800-460-3030
+        </span>
+        <button onClick={()=>go('emergency')}
+          style={{fontFamily:'var(--sans)',fontSize:12,fontWeight:500,
+            color:'rgba(255,255,255,0.85)',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.2)',
+            padding:'5px 12px',borderRadius:5,cursor:'pointer',flexShrink:0}}>All Contacts →</button>
+      </div>
+
+      {/* PAGE */}
+      <div key={page} className="fade"><Page /></div>
+
+      {/* FOOTER */}
+      <footer style={{borderTop:'1px solid var(--border)',padding:'20px 48px',
+        display:'flex',justifyContent:'space-between',color:'var(--muted)',fontSize:12,flexWrap:'wrap',gap:8,background:'var(--surface2)'}}>
+        <span>3405 Sandy Trail Lane · Plano, TX 75023 · Carriage Hill Subdivision</span>
+        <span>Resident Portal · Updated May 2026</span>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
