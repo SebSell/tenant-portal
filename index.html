@@ -118,7 +118,7 @@ const Panel = ({children,style={}}) => (
 
 function PageHome({go}) {
   const tiles = [
-    {id:'smart-home',icon:'⚡',title:'Smart Home',desc:'Nest thermostat, Ting monitor, garage openers'},
+    {id:'smart-home',icon:'⚡',title:'Smart Home',desc:'Nest thermostat, garage openers'},
     {id:'pool',      icon:'🏊',title:'Pool & Spa', desc:'Pump schedule, safety rules, maintenance'},
     {id:'hvac',      icon:'🌡️',title:'HVAC',       desc:'Filter schedule, repair process, thermostat'},
     {id:'utilities', icon:'🔌',title:'Utilities',  desc:'Setup instructions and move-in timeline'},
@@ -140,7 +140,7 @@ function PageHome({go}) {
           {l:'Lease End',v:'June 30, 2027'},
           {l:'Monthly Rent',v:'$4,600'},
           {l:'Due Date',v:'1st of month'},
-          {l:'Pay via Zelle',v:'sellam@msn.com'},
+          {l:'Pay via',v:'Zelle (sellam@msn.com) or ACH'},
         ].map(m=>(
           <div key={m.l} style={{background:'var(--surface2)',border:'1px solid var(--border)',padding:'18px 22px',borderRadius:8}}>
             <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',marginBottom:6,fontWeight:500}}>{m.l}</div>
@@ -171,20 +171,14 @@ function PageSmartHome() {
     {icon:'🌡️',name:'Thermostat',sub:'Nest — Google Home app',
      steps:['Download the Google Home app on your phone','Sign in with the account Sebastien shares with you','Control temperature, schedules, and modes remotely'],
      link:'https://home.google.com',lbl:'Open Google Home'},
-    {icon:'🔒',name:'Security Monitor',sub:'Ting — Arc Fault Monitor',
-     steps:['Ting plugs into an outlet and monitors your electrical system','Log in at ting.com to view your home\'s arc fault status','Contact Sebastien if Ting reports any warning'],
-     link:'https://ting.com',lbl:'Open Ting Dashboard'},
-    {icon:'🚗',name:'Garage Openers',sub:'3 openers provided at move-in',
-     steps:['3 remote openers provided at move-in','Replace batteries (CR2032) if unresponsive','Do not share openers with guests without permission'],
-     link:null},
-    {icon:'💧',name:'Water Softener',sub:'Check salt level monthly',
-     steps:['Check salt level monthly','Top up with standard water softener salt pellets','Maintain appropriate chemical levels per lease Section 8.1'],
+    {icon:'🚗',name:'Garage Openers',sub:'2 openers provided at move-in',
+     steps:['2 remote openers provided at move-in','Replace batteries (CR2032) if unresponsive','Do not share openers with guests without permission'],
      link:null},
   ];
   return (
     <PageWrap>
       <PageHeader tag="02 — Smart Home" title="Smart Home Controls"
-        intro="Your home includes a Nest thermostat, Ting arc fault monitor, 3-car garage, and a water softener. Use the links below to access each system." />
+        intro="Your home includes a Nest thermostat and a 3-car garage with 2 openers. Use the link below to access the thermostat." />
       <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2}}>
         {items.map(c=>(
           <Panel key={c.name}>
@@ -340,14 +334,14 @@ function PageUtilities() {
     {icon:'💧',name:'Water & Trash',sub:'City of Plano Utility Services',
      steps:['Call 972-769-4150','Provide lease start date and address','A deposit may be required','Confirm trash/recycling days at signup'],
      link:'https://www.plano.gov/374/Water-Utility',lbl:'plano.gov / Water'},
-    {icon:'📡',name:'Internet',sub:'AT&T Fiber or Spectrum · Your choice',
-     steps:['AT&T Fiber is available at this address','Schedule install 1–2 weeks before move-in','Coordinate access with Sebastien if before June 15'],
+    {icon:'📡',name:'Internet',sub:'AT&T Fiber · Frontier · Spectrum · Your choice',
+     steps:['AT&T Fiber and Frontier Fiber are both available at this address','Compare plans and pricing before choosing','Schedule install 1–2 weeks before move-in — book early','Coordinate access with Sebastien if before June 15'],
      link:'https://www.att.com/internet/',lbl:'AT&T Fiber'},
   ];
   const tl = [
     {done:true, now:false,week:'Now — May 2026',         title:'Lease signed & deposit paid',       desc:'Lease executed, deposits collected.',tags:['Complete']},
     {done:false,now:true, week:'May 19–25 (4–5 wks out)',title:'Set up electricity, gas & water',   desc:'Activate all three with a June 15 start date.',tags:['Electric','Gas','Water']},
-    {done:false,now:false,week:'May 26–Jun 1 (3–4 wks)', title:'Schedule internet installation',   desc:'Book AT&T or Spectrum — slots fill fast.',tags:['Internet']},
+    {done:false,now:false,week:'May 26–Jun 1 (3–4 wks)', title:'Schedule internet installation',   desc:'Book AT&T Fiber, Frontier, or Spectrum — slots fill fast.',tags:['Internet']},
     {done:false,now:false,week:'Jun 1–10 (1–2 wks)',      title:'Confirm all accounts are active',  desc:'Log in or call each provider to verify.',tags:['Verify all']},
     {done:false,now:false,week:'Jun 15 — Move-in Day',   title:'Keys, walkthrough & Exhibit A',    desc:'Locate water shut-off and breaker panel.',tags:['Keys','Exhibit A']},
     {done:false,now:false,week:'Jun 15–22 — First Week', title:'Set up autopay & Nest app',         desc:'Enroll in autopay, connect Google Home.',tags:['Auto-pay','Nest']},
