@@ -498,14 +498,14 @@ intro="The property is covered by American Home Shield (AHS). Always notify Seba
 <Panel>
 <Tag>Coverage Summary</Tag>
 <H2>What’s Covered</H2>
-{[‘HVAC systems (heating & cooling)’,‘Plumbing systems’,‘Electrical systems’,‘Water heater’,‘Built-in kitchen appliances’,‘Washer & dryer’,‘Pool & spa equipment (above-ground)’].map((c,i)=>(
+{[‘HVAC systems (heating & cooling)’,‘Plumbing systems’,‘Electrical systems’,‘Water heater’,‘Built-in kitchen appliances’,‘Washer & dryer’].map((c,i)=>(
 <div key={i} style={{display:‘flex’,gap:10,padding:‘9px 0’,borderBottom:‘1px solid var(–border)’,fontSize:12}}>
 <span style={{color:‘var(–accent)’,flexShrink:0}}>✓</span><span>{c}</span>
 </div>
 ))}
 <div style={{marginTop:20}}>
 <Tag color="#9B6A35">Not Covered</Tag>
-{[‘Routine maintenance (filters, bulbs, batteries)’,‘Cosmetic items with no functional impact’,‘Tenant-caused damage’,‘Pre-existing conditions’].map((c,i)=>(
+{[‘Routine maintenance (filters, bulbs, batteries)’,‘Cosmetic items with no functional impact’,‘Tenant-caused damage’,‘Pre-existing conditions’,‘Pool & spa equipment — contact Sebastien directly’].map((c,i)=>(
 <div key={i} style={{display:‘flex’,gap:10,padding:‘8px 0’,borderBottom:‘1px solid var(–border)’,fontSize:12}}>
 <span style={{color:’#C0392B’,flexShrink:0}}>✗</span><span style={{color:‘var(–muted)’}}>{c}</span>
 </div>
@@ -574,7 +574,7 @@ const categories = [
 {icon:‘🔧’, title:‘Plumbing’, examples:‘Leak, clog, no hot water, running toilet’},
 {icon:‘🌡️’, title:‘HVAC’,    examples:‘Heating, cooling, unusual noises, no airflow’},
 {icon:‘⚡’, title:‘Electrical’, examples:‘Outlet not working, tripped breaker, fixture’},
-{icon:‘🏊’, title:‘Pool / Spa’, examples:‘Equipment issue, water chemistry, pump problem’},
+{icon:‘🏊’, title:‘Pool / Spa’, examples:‘Equipment issue, water chemistry, pump problem — contact Sebastien directly, not covered by AHS’},
 {icon:‘🍳’, title:‘Appliances’, examples:‘Oven, fridge, dishwasher, washer/dryer’},
 {icon:‘🚗’, title:‘Garage’,  examples:‘Door not opening, opener issue’},
 {icon:‘🪲’, title:‘Pest / Wildlife’, examples:‘Insects, rodents, or animals in the home’},
