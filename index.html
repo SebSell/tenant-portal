@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -49,10 +50,11 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--accent2);outline
 const {useState} = React;
 
 /* ── primitives ── */
-const Tag = ({children,color='var(--accent-mid)'}) => (
-  <span style={{fontSize:10,letterSpacing:'0.08em',textTransform:'uppercase',color,fontWeight:600,display:'block',marginBottom:8}}>{children}</span>
+const Tag = ({children,color=‘var(–accent-mid)’}) => (
+<span style={{fontSize:10,letterSpacing:‘0.08em’,textTransform:‘uppercase’,color,fontWeight:600,display:‘block’,marginBottom:8}}>{children}</span>
 );
 const H1 = ({children}) => (
+
   <h1 style={{fontFamily:'var(--sans)',fontSize:'clamp(28px,4vw,44px)',fontWeight:600,lineHeight:1.15,color:'var(--text)',letterSpacing:'-0.02em'}}>{children}</h1>
 );
 const H2 = ({children,mb=20}) => (
@@ -117,659 +119,675 @@ const Panel = ({children,style={}}) => (
 /* ══ PAGES ══ */
 
 function PageHome({go}) {
-  const tiles = [
-    {id:'smart-home',icon:'⚡',title:'Smart Home',desc:'Nest thermostat, garage openers'},
-    {id:'pool',      icon:'🏊',title:'Pool & Spa', desc:'Pump schedule, safety rules, maintenance'},
-    {id:'hvac',      icon:'🌡️',title:'HVAC',       desc:'Filter schedule, repair process, thermostat'},
-    {id:'utilities', icon:'🔌',title:'Utilities',  desc:'Setup instructions and move-in timeline'},
-    {id:'warranty',  icon:'🛡️',title:'Home Warranty',desc:'AHS coverage and how to request repairs'},
-    {id:'emergency', icon:'🚨',title:'Emergency',  desc:'Key contacts for urgent situations'},
-    {id:'service',   icon:'🔧',title:'Maintenance',desc:'How to request a repair and what to expect'},
-  ];
-  return (
-    <PageWrap>
-      <div style={{marginBottom:52}}>
-        <Tag>Welcome, Robert &amp; Sayde</Tag>
-        <H1>Your home,<br/><em style={{fontStyle:'italic',color:'var(--accent2)'}}>at your fingertips.</em></H1>
-        <Muted style={{marginTop:12,maxWidth:500}}>Everything you need to manage 3405 Sandy Trail Lane — from the pool pump to the home warranty — all in one place.</Muted>
-      </div>
+const tiles = [
+{id:‘smart-home’,icon:‘⚡’,title:‘Smart Home’,desc:‘Nest thermostat, garage openers’},
+{id:‘pool’,      icon:‘🏊’,title:‘Pool & Spa’, desc:‘Pump schedule, safety rules, maintenance’},
+{id:‘hvac’,      icon:‘🌡️’,title:‘HVAC’,       desc:‘Filter schedule, repair process, thermostat’},
+{id:‘utilities’, icon:‘🔌’,title:‘Utilities’,  desc:‘Setup instructions and move-in timeline’},
+{id:‘warranty’,  icon:‘🛡️’,title:‘Home Warranty’,desc:‘AHS coverage and how to request repairs’},
+{id:‘emergency’, icon:‘🚨’,title:‘Emergency’,  desc:‘Key contacts for urgent situations’},
+{id:‘service’,   icon:‘🔧’,title:‘Maintenance’,desc:‘How to request a repair and what to expect’},
+];
+return (
+<PageWrap>
+<div style={{marginBottom:52}}>
+<Tag>Welcome, Robert & Sayde</Tag>
+<H1>Your home,<br/><em style={{fontStyle:‘italic’,color:‘var(–accent2)’}}>at your fingertips.</em></H1>
+<Muted style={{marginTop:12,maxWidth:500}}>Everything you need to manage 3405 Sandy Trail Lane — from the pool pump to the home warranty — all in one place.</Muted>
+</div>
 
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:2,marginBottom:52}}>
-        {[
-          {l:'Lease Start',v:'June 15, 2026'},
-          {l:'Lease End',v:'June 30, 2027'},
-          {l:'Monthly Rent',v:'$4,600'},
-          {l:'Due Date',v:'1st of month'},
-          {l:'Pay via',v:'Zelle (sellam@msn.com) or ACH'},
-        ].map(m=>(
-          <div key={m.l} style={{background:'var(--surface2)',border:'1px solid var(--border)',padding:'18px 22px',borderRadius:8}}>
-            <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',marginBottom:6,fontWeight:500}}>{m.l}</div>
-            <div style={{fontSize:14,fontWeight:600,color:'var(--text)'}}>{m.v}</div>
-          </div>
-        ))}
+```
+  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:2,marginBottom:52}}>
+    {[
+      {l:'Lease Start',v:'June 15, 2026'},
+      {l:'Lease End',v:'June 30, 2027'},
+      {l:'Monthly Rent',v:'$4,600'},
+      {l:'Due Date',v:'1st of month'},
+      {l:'Pay via',v:'Zelle (sellam@msn.com) or ACH'},
+    ].map(m=>(
+      <div key={m.l} style={{background:'var(--surface2)',border:'1px solid var(--border)',padding:'18px 22px',borderRadius:8}}>
+        <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',marginBottom:6,fontWeight:500}}>{m.l}</div>
+        <div style={{fontSize:14,fontWeight:600,color:'var(--text)'}}>{m.v}</div>
       </div>
+    ))}
+  </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:2}}>
-        {tiles.map(t=>(
-          <div key={t.id} onClick={()=>go(t.id)}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--accent)';e.currentTarget.style.boxShadow='0 4px 16px rgba(30,58,95,0.08)';}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.boxShadow='none';}}
-            style={{background:'var(--surface)',border:'1px solid var(--border)',padding:28,cursor:'pointer',transition:'all .2s',borderRadius:10,boxShadow:'none'}}>
-            <div style={{fontSize:28,marginBottom:12}}>{t.icon}</div>
-            <div style={{fontFamily:'var(--sans)',fontSize:16,fontWeight:600,marginBottom:6,letterSpacing:'-0.01em'}}>{t.title}</div>
-            <div style={{fontSize:12.5,color:'var(--muted)',lineHeight:1.6,marginBottom:18}}>{t.desc}</div>
-            <span style={{fontSize:12,fontWeight:500,color:'var(--accent-mid)',display:'inline-flex',alignItems:'center',gap:4}}>Go to →</span>
-          </div>
-        ))}
+  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:2}}>
+    {tiles.map(t=>(
+      <div key={t.id} onClick={()=>go(t.id)}
+        onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--accent)';e.currentTarget.style.boxShadow='0 4px 16px rgba(30,58,95,0.08)';}}
+        onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.boxShadow='none';}}
+        style={{background:'var(--surface)',border:'1px solid var(--border)',padding:28,cursor:'pointer',transition:'all .2s',borderRadius:10,boxShadow:'none'}}>
+        <div style={{fontSize:28,marginBottom:12}}>{t.icon}</div>
+        <div style={{fontFamily:'var(--sans)',fontSize:16,fontWeight:600,marginBottom:6,letterSpacing:'-0.01em'}}>{t.title}</div>
+        <div style={{fontSize:12.5,color:'var(--muted)',lineHeight:1.6,marginBottom:18}}>{t.desc}</div>
+        <span style={{fontSize:12,fontWeight:500,color:'var(--accent-mid)',display:'inline-flex',alignItems:'center',gap:4}}>Go to →</span>
       </div>
-    </PageWrap>
-  );
+    ))}
+  </div>
+</PageWrap>
+```
+
+);
 }
 
 function PageSmartHome() {
-  const items = [
-    {icon:'🌡️',name:'Thermostat',sub:'Nest — Google Home app',
-     steps:['Download the Google Home app on your phone','Sign in with the account Sebastien shares with you','Control temperature, schedules, and modes remotely'],
-     link:'https://home.google.com',lbl:'Open Google Home'},
-    {icon:'🚗',name:'Garage Openers',sub:'2 openers provided at move-in',
-     steps:['2 remote openers provided at move-in','Replace batteries (CR2032) if unresponsive','Do not share openers with guests without permission'],
-     link:null},
-  ];
-  return (
-    <PageWrap>
-      <PageHeader tag="02 — Smart Home" title="Smart Home Controls"
-        intro="Your home includes a Nest thermostat and a 3-car garage with 2 openers. Use the link below to access the thermostat." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2}}>
-        {items.map(c=>(
-          <Panel key={c.name}>
-            <div style={{fontSize:26,marginBottom:10}}>{c.icon}</div>
-            <div style={{fontSize:15,fontWeight:500,marginBottom:3}}>{c.name}</div>
-            <div style={{fontSize:11,color:'var(--muted)',marginBottom:14}}>{c.sub}</div>
-            <div style={{borderTop:'1px solid var(--border)',paddingTop:12,display:'flex',flexDirection:'column',gap:7}}>
-              {c.steps.map((s,i)=>(
-                <div key={i} style={{display:'flex',gap:8,fontSize:11,color:'var(--muted)'}}>
-                  <span style={{color:'var(--accent)',fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
-                </div>
-              ))}
-            </div>
-            {c.link && <div style={{marginTop:16}}><Btn href={c.link}>↗ {c.lbl}</Btn></div>}
-          </Panel>
-        ))}
-      </div>
-    </PageWrap>
-  );
+const items = [
+{icon:‘🌡️’,name:‘Thermostat’,sub:‘Nest — Google Home app’,
+steps:[‘Download the Google Home app on your phone’,‘Sign in with the account Sebastien shares with you’,‘Control temperature, schedules, and modes remotely’],
+link:‘https://home.google.com’,lbl:‘Open Google Home’},
+{icon:‘🚗’,name:‘Garage Openers’,sub:‘2 openers provided at move-in’,
+steps:[‘2 remote openers provided at move-in’,‘Replace batteries (CR2032) if unresponsive’,‘Do not share openers with guests without permission’],
+link:null},
+];
+return (
+<PageWrap>
+<PageHeader tag="02 — Smart Home" title="Smart Home Controls"
+intro="Your home includes a Nest thermostat and a 3-car garage with 2 openers. Use the link below to access the thermostat." />
+<div className=“grid-2” style={{display:‘grid’,gridTemplateColumns:‘1fr 1fr’,gap:2}}>
+{items.map(c=>(
+<Panel key={c.name}>
+<div style={{fontSize:26,marginBottom:10}}>{c.icon}</div>
+<div style={{fontSize:15,fontWeight:500,marginBottom:3}}>{c.name}</div>
+<div style={{fontSize:11,color:‘var(–muted)’,marginBottom:14}}>{c.sub}</div>
+<div style={{borderTop:‘1px solid var(–border)’,paddingTop:12,display:‘flex’,flexDirection:‘column’,gap:7}}>
+{c.steps.map((s,i)=>(
+<div key={i} style={{display:‘flex’,gap:8,fontSize:11,color:‘var(–muted)’}}>
+<span style={{color:‘var(–accent)’,fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
+</div>
+))}
+</div>
+{c.link && <div style={{marginTop:16}}><Btn href={c.link}>↗ {c.lbl}</Btn></div>}
+</Panel>
+))}
+</div>
+</PageWrap>
+);
 }
 
 function PagePool() {
-  const progs = [
-    {n:1,rpm:'1,750 RPM',time:'12:00 AM – 6:00 AM',purpose:'Main Circulation',auto:true,pct:51},
-    {n:2,rpm:'3,000 RPM',time:'3:00 PM – 4:00 PM', purpose:'Afternoon Skimming',auto:true,pct:87},
-    {n:3,rpm:'2,000 RPM',time:'1 hr on demand',     purpose:'Chemical Distribution',auto:false,pct:58},
-    {n:4,rpm:'3,450 RPM',time:'On demand',           purpose:'Spa Mode',auto:false,pct:100},
-    {n:5,rpm:'3,450 RPM',time:'6:00 AM – 6:30 AM',  purpose:'Morning Purge',auto:true,pct:100},
-  ];
-  return (
-    <PageWrap>
-      <PageHeader tag="03 — Pool &amp; Spa" title="Pool & Spa"
-        intro="The property includes an in-ground pool and spa. Tenants are responsible for day-to-day pool maintenance per Exhibit B of the lease." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:2,alignItems:'start'}}>
+const progs = [
+{n:1,rpm:‘1,750 RPM’,time:‘12:00 AM – 6:00 AM’,purpose:‘Main Circulation’,auto:true,pct:51},
+{n:2,rpm:‘3,000 RPM’,time:‘3:00 PM – 4:00 PM’, purpose:‘Afternoon Skimming’,auto:true,pct:87},
+{n:3,rpm:‘2,000 RPM’,time:‘1 hr on demand’,     purpose:‘Chemical Distribution’,auto:false,pct:58},
+{n:4,rpm:‘3,450 RPM’,time:‘On demand’,           purpose:‘Spa Mode’,auto:false,pct:100},
+{n:5,rpm:‘3,450 RPM’,time:‘6:00 AM – 6:30 AM’,  purpose:‘Morning Purge’,auto:true,pct:100},
+];
+return (
+<PageWrap>
+<PageHeader tag="03 — Pool &amp; Spa" title="Pool & Spa"
+intro="The property includes an in-ground pool and spa. Tenants are responsible for day-to-day pool maintenance per Exhibit B of the lease." />
+<div className=“grid-2” style={{display:‘grid’,gridTemplateColumns:‘3fr 2fr’,gap:2,alignItems:‘start’}}>
 
-        <div style={{display:'flex',flexDirection:'column',gap:2}}>
-          <Panel>
-            <Tag>Pump Schedule</Tag>
-            <H2>IntelliFlo Programs</H2>
-            <table style={{width:'100%',borderCollapse:'collapse',marginBottom:20}}>
-              <thead><tr>
-                {['Prog','Speed','Time','Purpose','Type'].map(h=>(
-                  <th key={h} style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',textAlign:'left',padding:'0 0 10px',borderBottom:'1px solid var(--border)',fontWeight:400}}>{h}</th>
-                ))}
-              </tr></thead>
-              <tbody>
-                {progs.map(p=>(
-                  <tr key={p.n}>
-                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontWeight:500}}>{p.n}</td>
-                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.rpm}</td>
-                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:11,color:'var(--muted)'}}>{p.time}</td>
-                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.purpose}</td>
-                    <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
-                      <span style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',padding:'3px 8px',borderRadius:2,fontWeight:500,
-                        background:p.auto?'var(--accent-light)':'#FDF3E7',color:p.auto?'var(--accent)':'#9B6A35'}}>{p.auto?'Auto':'Manual'}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{display:'flex',flexDirection:'column',gap:10}}>
-              {progs.map(p=>(
-                <div key={p.n} style={{display:'flex',alignItems:'center',gap:12}}>
-                  <span style={{fontSize:11,color:'var(--muted)',width:170,flexShrink:0}}>Prog {p.n} — {p.purpose}</span>
-                  <div style={{flex:1,height:4,background:'var(--border)',borderRadius:2}}>
-                    <div style={{width:p.pct+'%',height:'100%',background:'var(--accent)',borderRadius:2}}></div>
-                  </div>
-                  <span style={{fontSize:11,fontWeight:500,width:70,textAlign:'right'}}>{p.rpm}</span>
+```
+    <div style={{display:'flex',flexDirection:'column',gap:2}}>
+      <Panel>
+        <Tag>Pump Schedule</Tag>
+        <H2>IntelliFlo Programs</H2>
+        <table style={{width:'100%',borderCollapse:'collapse',marginBottom:20}}>
+          <thead><tr>
+            {['Prog','Speed','Time','Purpose','Type'].map(h=>(
+              <th key={h} style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',textAlign:'left',padding:'0 0 10px',borderBottom:'1px solid var(--border)',fontWeight:400}}>{h}</th>
+            ))}
+          </tr></thead>
+          <tbody>
+            {progs.map(p=>(
+              <tr key={p.n}>
+                <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontWeight:500}}>{p.n}</td>
+                <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.rpm}</td>
+                <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:11,color:'var(--muted)'}}>{p.time}</td>
+                <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>{p.purpose}</td>
+                <td style={{padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
+                  <span style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',padding:'3px 8px',borderRadius:2,fontWeight:500,
+                    background:p.auto?'var(--accent-light)':'#FDF3E7',color:p.auto?'var(--accent)':'#9B6A35'}}>{p.auto?'Auto':'Manual'}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {progs.map(p=>(
+            <div key={p.n} style={{display:'flex',alignItems:'center',gap:12}}>
+              <span style={{fontSize:11,color:'var(--muted)',width:170,flexShrink:0}}>Prog {p.n} — {p.purpose}</span>
+              <div style={{flex:1,height:4,background:'var(--border)',borderRadius:2}}>
+                <div style={{width:p.pct+'%',height:'100%',background:'var(--accent)',borderRadius:2}}></div>
+              </div>
+              <span style={{fontSize:11,fontWeight:500,width:70,textAlign:'right'}}>{p.rpm}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:20}}><Btn outline href="https://www.pentair.com">↗ Pentair Manual</Btn></div>
+      </Panel>
+
+      {/* ── VALVE CONFIGURATION ── */}
+      <Panel>
+        <Tag>Valve Configuration</Tag>
+        <H2>Intake & Return Valves</H2>
+
+        {/* Normal / Pool mode */}
+        <div style={{marginBottom:20}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+            <div style={{background:'var(--accent-light)',border:'1px solid #BFCFE8',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'var(--accent)',flexShrink:0}}>🏊 Pool Mode</div>
+            <span style={{fontSize:11,color:'var(--muted)'}}>Normal daily use</span>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+              <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
+              {[['Skimmer','Open'],['Pool','Open'],['Vac','Open'],['Spa','Closed']].map(([v,s])=>(
+                <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                  <span style={{color:'var(--text)'}}>{v}</span>
+                  <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
                 </div>
               ))}
             </div>
-            <div style={{marginTop:20}}><Btn outline href="https://www.pentair.com">↗ Pentair Manual</Btn></div>
-          </Panel>
-
-          {/* ── VALVE CONFIGURATION ── */}
-          <Panel>
-            <Tag>Valve Configuration</Tag>
-            <H2>Intake & Return Valves</H2>
-
-            {/* Normal / Pool mode */}
-            <div style={{marginBottom:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
-                <div style={{background:'var(--accent-light)',border:'1px solid #BFCFE8',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'var(--accent)',flexShrink:0}}>🏊 Pool Mode</div>
-                <span style={{fontSize:11,color:'var(--muted)'}}>Normal daily use</span>
-              </div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
-                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
-                  {[['Skimmer','Open'],['Pool','Open'],['Vac','Open'],['Spa','Closed']].map(([v,s])=>(
-                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                      <span style={{color:'var(--text)'}}>{v}</span>
-                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
-                    </div>
-                  ))}
+            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+              <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
+              {[['Pool','Open'],['Spa','Open']].map(([v,s])=>(
+                <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                  <span style={{color:'var(--text)'}}>{v}</span>
+                  <span style={{fontSize:11,fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'2px 8px',borderRadius:4}}>{s}</span>
                 </div>
-                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
-                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
-                  {[['Pool','Open'],['Spa','Open']].map(([v,s])=>(
-                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                      <span style={{color:'var(--text)'}}>{v}</span>
-                      <span style={{fontSize:11,fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'2px 8px',borderRadius:4}}>{s}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
-
-            {/* Spa mode */}
-            <div style={{borderTop:'1px solid var(--border)',paddingTop:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
-                <div style={{background:'#FDF3E7',border:'1px solid #F0C070',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'#92400E',flexShrink:0}}>🛁 Spa Mode</div>
-                <span style={{fontSize:11,color:'var(--muted)'}}>Switch valves before running spa</span>
-              </div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
-                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
-                  {[['Skimmer','Closed'],['Pool','Closed'],['Vac','Closed'],['Spa','Open']].map(([v,s])=>(
-                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                      <span style={{color:'var(--text)'}}>{v}</span>
-                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
-                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
-                  {[['Pool','Closed'],['Spa','Open']].map(([v,s])=>(
-                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                      <span style={{color:'var(--text)'}}>{v}</span>
-                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Panel>
-
-          {/* ── SPA OPERATING INSTRUCTIONS ── */}
-          <Panel>
-            <Tag>Spa Operating Instructions</Tag>
-            <H2>How to Run the Spa</H2>
-            <Step n={1} title="Set valves to Spa Mode" desc="Switch Intake to Spa only (close Skimmer, Pool, Vac). Switch Return to Spa only (close Pool return)." />
-            <Step n={2} title="Select Program 4 on the pump" desc="On the IntelliFlo keypad, select Program 4 (3,450 RPM — Spa Mode). The pump must be running on Program 4 before turning on the heater." />
-            <Step n={3} title="Turn on the heater" desc="The heater can only be activated when Program 4 is running. Turn the heater on after confirming the pump is at full speed." />
-            <Step n={4} title="Allow time to heat" desc="The spa will take time to reach temperature depending on starting water temp. Stay nearby and monitor." />
-            <Step n={5} title="When finished — restore Pool Mode" desc="Turn off the heater first. Stop Program 4. Then switch all valves back to Pool Mode: open Skimmer, Pool, and Vac intake; open both Pool and Spa returns." />
-            <div style={{marginTop:16}}>
-              <Highlight>
-                <strong>⚠ Important:</strong> Never turn on the heater unless Program 4 is actively running. Running the heater without sufficient water flow can damage the heater. Always restore valves to Pool Mode when done.
-              </Highlight>
-            </div>
-          </Panel>
-
-          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:2}}>
-            {[['Volume','~8,000 gal'],['Size','23.5 × 11.5 ft'],['Depth','avg 4 ft'],['Pump','176L0676']].map(([l,v])=>(
-              <Card key={l} label={l} value={v} />
-            ))}
           </div>
         </div>
 
-        <div style={{display:'flex',flexDirection:'column',gap:2}}>
-          <Panel>
-            <Tag>Tenant Responsibilities</Tag>
-            <H2>Per Exhibit B</H2>
-            {['Maintain proper water levels at all times','Empty and clean skimmers at least once per week','Add appropriate chemicals and maintain water balance','Operate all pool equipment properly','Prevent freezing of pipes, equipment, and pool water','Keep all pool enclosure and yard gates closed at all times'].map((r,i)=>(
-              <div key={i} style={{display:'flex',gap:10,padding:'9px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                <span style={{color:'var(--accent)',flexShrink:0}}>✓</span><span>{r}</span>
-              </div>
-            ))}
-          </Panel>
-          <Panel>
-            <Tag>Safety Rules</Tag>
-            <H2>Pool &amp; Spa Safety</H2>
-            {['Children must have an adult present at all times','No glass containers near pool or spa','No diving under any circumstances','No alcohol or drug use while using pool or spa','All pool gates must remain closed and latched'].map((r,i)=>(
-              <Step key={i} n={i+1} title={r} desc="" />
-            ))}
-          </Panel>
+        {/* Spa mode */}
+        <div style={{borderTop:'1px solid var(--border)',paddingTop:20}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+            <div style={{background:'#FDF3E7',border:'1px solid #F0C070',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'#92400E',flexShrink:0}}>🛁 Spa Mode</div>
+            <span style={{fontSize:11,color:'var(--muted)'}}>Switch valves before running spa</span>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+              <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
+              {[['Skimmer','Closed'],['Pool','Closed'],['Vac','Closed'],['Spa','Open']].map(([v,s])=>(
+                <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                  <span style={{color:'var(--text)'}}>{v}</span>
+                  <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+              <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
+              {[['Pool','Closed'],['Spa','Open']].map(([v,s])=>(
+                <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                  <span style={{color:'var(--text)'}}>{v}</span>
+                  <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      </Panel>
+
+      {/* ── SPA OPERATING INSTRUCTIONS ── */}
+      <Panel>
+        <Tag>Spa Operating Instructions</Tag>
+        <H2>How to Run the Spa</H2>
+        <Step n={1} title="Set valves to Spa Mode" desc="Switch Intake to Spa only (close Skimmer, Pool, Vac). Switch Return to Spa only (close Pool return)." />
+        <Step n={2} title="Select Program 4 on the pump" desc="On the IntelliFlo keypad, select Program 4 (3,450 RPM — Spa Mode). The pump must be running on Program 4 before turning on the heater." />
+        <Step n={3} title="Turn on the heater" desc="The heater can only be activated when Program 4 is running. Turn the heater on after confirming the pump is at full speed." />
+        <Step n={4} title="Allow time to heat" desc="The spa will take time to reach temperature depending on starting water temp. Stay nearby and monitor." />
+        <Step n={5} title="When finished — restore Pool Mode" desc="Turn off the heater first. Stop Program 4. Then switch all valves back to Pool Mode: open Skimmer, Pool, and Vac intake; open both Pool and Spa returns." />
+        <div style={{marginTop:16}}>
+          <Highlight>
+            <strong>⚠ Important:</strong> Never turn on the heater unless Program 4 is actively running. Running the heater without sufficient water flow can damage the heater. Always restore valves to Pool Mode when done.
+          </Highlight>
+        </div>
+      </Panel>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:2}}>
+        {[['Volume','~8,000 gal'],['Size','23.5 × 11.5 ft'],['Depth','avg 4 ft'],['Pump','176L0676']].map(([l,v])=>(
+          <Card key={l} label={l} value={v} />
+        ))}
       </div>
-    </PageWrap>
-  );
+    </div>
+
+    <div style={{display:'flex',flexDirection:'column',gap:2}}>
+      <Panel>
+        <Tag>Tenant Responsibilities</Tag>
+        <H2>Per Exhibit B</H2>
+        {['Maintain proper water levels at all times','Empty and clean skimmers at least once per week','Add appropriate chemicals and maintain water balance','Operate all pool equipment properly','Prevent freezing of pipes, equipment, and pool water','Keep all pool enclosure and yard gates closed at all times'].map((r,i)=>(
+          <div key={i} style={{display:'flex',gap:10,padding:'9px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+            <span style={{color:'var(--accent)',flexShrink:0}}>✓</span><span>{r}</span>
+          </div>
+        ))}
+      </Panel>
+      <Panel>
+        <Tag>Safety Rules</Tag>
+        <H2>Pool &amp; Spa Safety</H2>
+        {['Children must have an adult present at all times','No glass containers near pool or spa','No diving under any circumstances','No alcohol or drug use while using pool or spa','All pool gates must remain closed and latched'].map((r,i)=>(
+          <Step key={i} n={i+1} title={r} desc="" />
+        ))}
+      </Panel>
+    </div>
+  </div>
+</PageWrap>
+```
+
+);
 }
 
 function PageHVAC({go}) {
-  return (
-    <PageWrap>
-      <PageHeader tag="04 — HVAC" title="HVAC & Climate"
-        intro="Your home is controlled by a Nest thermostat. Tenants handle routine maintenance; major system repairs are the landlord's responsibility." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2,alignItems:'start'}}>
-        <Panel>
-          <Tag>Responsibilities at a Glance</Tag>
-          <H2>Who Does What</H2>
-          <InfoRow label="Thermostat" value="Nest — Google Home app" />
-          <InfoRow label="HVAC filter" value="Replace when prompted — Tenant" />
-          <InfoRow label="Dryer vent cleaning" value="Every 6 months — Tenant" />
-          <InfoRow label="Refrigerator coils" value="Every 6 months — Tenant" />
-          <InfoRow label="Repairs over $150 (normal wear)" value="Landlord responsibility" />
-          <InfoRow label="All repair requests" value="Must be in writing to Sebastien" />
-          <InfoRow label="Pipe freezing prevention" value="Tenant (including vacations)" />
-          <div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:24}}>
-            <Btn href="https://home.google.com">↗ Open Nest</Btn>
-            <Btn outline onClick={()=>go('service')}>Submit Repair Request →</Btn>
-          </div>
-        </Panel>
-        <div style={{display:'flex',flexDirection:'column',gap:2}}>
-          <Warn>
-            <strong style={{display:'block',marginBottom:6}}>⚠ HVAC is NOT an emergency</strong>
-            For HVAC issues, submit a written repair request to Sebastien first. Do not call a contractor directly. HVAC is explicitly excluded from emergency status under Section 8.6 of the lease.
-          </Warn>
-          <Panel>
-            <Tag>Repair Process</Tag>
-            <H2>How to Request a Repair</H2>
-            <Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
-            <Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
-            <Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a licensed contractor within 48 hrs." />
-            <Step n={4} title="Provide access" desc="Trip charges apply if the contractor can't access." />
-          </Panel>
-        </div>
-      </div>
-    </PageWrap>
-  );
+return (
+<PageWrap>
+<PageHeader tag="04 — HVAC" title="HVAC & Climate"
+intro="Your home is controlled by a Nest thermostat. Tenants handle routine maintenance; major system repairs are the landlord's responsibility." />
+<div className=“grid-2” style={{display:‘grid’,gridTemplateColumns:‘1fr 1fr’,gap:2,alignItems:‘start’}}>
+<Panel>
+<Tag>Responsibilities at a Glance</Tag>
+<H2>Who Does What</H2>
+<InfoRow label="Thermostat" value="Nest — Google Home app" />
+<InfoRow label="HVAC filter" value="Replace when prompted — Tenant" />
+<InfoRow label="Dryer vent cleaning" value="Every 6 months — Tenant" />
+<InfoRow label="Refrigerator coils" value="Every 6 months — Tenant" />
+<InfoRow label="Repairs over $150 (normal wear)" value="Landlord responsibility" />
+<InfoRow label="All repair requests" value="Must be in writing to Sebastien" />
+<InfoRow label="Pipe freezing prevention" value="Tenant (including vacations)" />
+<div style={{display:‘flex’,gap:10,flexWrap:‘wrap’,marginTop:24}}>
+<Btn href="https://home.google.com">↗ Open Nest</Btn>
+<Btn outline onClick={()=>go(‘service’)}>Submit Repair Request →</Btn>
+</div>
+</Panel>
+<div style={{display:‘flex’,flexDirection:‘column’,gap:2}}>
+<Warn>
+<strong style={{display:‘block’,marginBottom:6}}>⚠ HVAC is NOT an emergency</strong>
+For HVAC issues, submit a written repair request to Sebastien first. Do not call a contractor directly. HVAC is explicitly excluded from emergency status under Section 8.6 of the lease.
+</Warn>
+<Panel>
+<Tag>Repair Process</Tag>
+<H2>How to Request a Repair</H2>
+<Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
+<Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
+<Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a licensed contractor within 48 hrs." />
+<Step n={4} title="Provide access" desc="Trip charges apply if the contractor can't access." />
+</Panel>
+</div>
+</div>
+</PageWrap>
+);
 }
 
 function PageUtilities() {
-  const utils = [
-    {icon:'⚡',name:'Electricity',sub:'Your choice · Delivered by Oncor',
-     steps:['Go to PowerToChoose.org and compare rates','Select a fixed-rate 12-month plan','Set start date to June 15, 2026','Provide SSN and address to enroll'],
-     link:'https://www.powertochoose.org',lbl:'PowerToChoose.org'},
-    {icon:'🔥',name:'Natural Gas',sub:'Atmos Energy · No choice in Plano',
-     steps:['Call 888-286-6700 or visit atmosenergy.com','Request service at 3405 Sandy Trail Ln TX 75023','Set start date to June 15, 2026','Technician may need access for meter activation'],
-     link:'https://www.atmosenergy.com',lbl:'atmosenergy.com'},
-    {icon:'💧',name:'Water & Trash',sub:'City of Plano Utility Services',
-     steps:['Call 972-769-4150','Provide lease start date and address','A deposit may be required','Confirm trash/recycling days at signup'],
-     link:'https://www.plano.gov/374/Water-Utility',lbl:'plano.gov / Water'},
-    {icon:'📡',name:'Internet',sub:'AT&T Fiber · Frontier · Spectrum · Your choice',
-     steps:['AT&T Fiber and Frontier Fiber are both available at this address','Compare plans and pricing before choosing','Schedule install 1–2 weeks before move-in — book early','Coordinate access with Sebastien if before June 15'],
-     link:'https://www.att.com/internet/',lbl:'AT&T Fiber'},
-  ];
-  const tl = [
-    {done:true, now:false,week:'Now — May 2026',         title:'Lease signed & deposit paid',       desc:'Lease executed, deposits collected.',tags:['Complete']},
-    {done:false,now:true, week:'May 19–25 (4–5 wks out)',title:'Set up electricity, gas & water',   desc:'Activate all three with a June 15 start date.',tags:['Electric','Gas','Water']},
-    {done:false,now:false,week:'May 26–Jun 1 (3–4 wks)', title:'Schedule internet installation',   desc:'Book AT&T Fiber, Frontier, or Spectrum — slots fill fast.',tags:['Internet']},
-    {done:false,now:false,week:'Jun 1–10 (1–2 wks)',      title:'Confirm all accounts are active',  desc:'Log in or call each provider to verify.',tags:['Verify all']},
-    {done:false,now:false,week:'Jun 15 — Move-in Day',   title:'Keys, walkthrough & Exhibit A',    desc:'Locate water shut-off and breaker panel.',tags:['Keys','Exhibit A']},
-    {done:false,now:false,week:'Jun 15–22 — First Week', title:'Set up autopay & Nest app',         desc:'Enroll in autopay, connect Google Home.',tags:['Auto-pay','Nest']},
-  ];
-  return (
-    <PageWrap>
-      <PageHeader tag="05 — Utilities" title="Utilities Setup"
-        intro="All utilities must be activated in your name before move-in on June 15, 2026." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:2,alignItems:'start'}}>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2}}>
-          {utils.map(u=>(
-            <Panel key={u.name}>
-              <div style={{fontSize:26,marginBottom:10}}>{u.icon}</div>
-              <div style={{fontSize:14,fontWeight:500,marginBottom:3}}>{u.name}</div>
-              <div style={{fontSize:11,color:'var(--muted)',marginBottom:14}}>{u.sub}</div>
-              <div style={{borderTop:'1px solid var(--border)',paddingTop:12,display:'flex',flexDirection:'column',gap:6}}>
-                {u.steps.map((s,i)=>(
-                  <div key={i} style={{display:'flex',gap:8,fontSize:11,color:'var(--muted)'}}>
-                    <span style={{color:'var(--accent)',fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
-                  </div>
-                ))}
-              </div>
-              {u.link && <div style={{marginTop:14}}><a href={u.link} target="_blank" rel="noreferrer"
-                style={{fontSize:12,color:'var(--accent-mid)',textDecoration:'none',fontWeight:500,display:'inline-flex',alignItems:'center',gap:4}}>↗ {u.lbl}</a></div>}
-            </Panel>
-          ))}
-        </div>
+const utils = [
+{icon:‘⚡’,name:‘Electricity’,sub:‘Your choice · Delivered by Oncor’,
+steps:[‘Go to PowerToChoose.org and compare rates’,‘Select a fixed-rate 12-month plan’,‘Set start date to June 15, 2026’,‘Provide SSN and address to enroll’],
+link:‘https://www.powertochoose.org’,lbl:‘PowerToChoose.org’},
+{icon:‘🔥’,name:‘Natural Gas’,sub:‘Atmos Energy · No choice in Plano’,
+steps:[‘Call 888-286-6700 or visit atmosenergy.com’,‘Request service at 3405 Sandy Trail Ln TX 75023’,‘Set start date to June 15, 2026’,‘Technician may need access for meter activation’],
+link:‘https://www.atmosenergy.com’,lbl:‘atmosenergy.com’},
+{icon:‘💧’,name:‘Water & Trash’,sub:‘City of Plano Utility Services’,
+steps:[‘Call 972-769-4150’,‘Provide lease start date and address’,‘A deposit may be required’,‘Confirm trash/recycling days at signup’],
+link:‘https://www.plano.gov/374/Water-Utility’,lbl:‘plano.gov / Water’},
+{icon:‘📡’,name:‘Internet’,sub:‘AT&T Fiber · Frontier · Spectrum · Your choice’,
+steps:[‘AT&T Fiber and Frontier Fiber are both available at this address’,‘Compare plans and pricing before choosing’,‘Schedule install 1–2 weeks before move-in — book early’,‘Coordinate access with Sebastien if before June 15’],
+link:‘https://www.att.com/internet/’,lbl:‘AT&T Fiber’},
+];
+const tl = [
+{done:true, now:false,week:‘Now — May 2026’,         title:‘Lease signed & deposit paid’,       desc:‘Lease executed, deposits collected.’,tags:[‘Complete’]},
+{done:false,now:true, week:‘May 19–25 (4–5 wks out)’,title:‘Set up electricity, gas & water’,   desc:‘Activate all three with a June 15 start date.’,tags:[‘Electric’,‘Gas’,‘Water’]},
+{done:false,now:false,week:‘May 26–Jun 1 (3–4 wks)’, title:‘Schedule internet installation’,   desc:‘Book AT&T Fiber, Frontier, or Spectrum — slots fill fast.’,tags:[‘Internet’]},
+{done:false,now:false,week:‘Jun 1–10 (1–2 wks)’,      title:‘Confirm all accounts are active’,  desc:‘Log in or call each provider to verify.’,tags:[‘Verify all’]},
+{done:false,now:false,week:‘Jun 15 — Move-in Day’,   title:‘Keys, walkthrough & Exhibit A’,    desc:‘Locate water shut-off and breaker panel.’,tags:[‘Keys’,‘Exhibit A’]},
+{done:false,now:false,week:‘Jun 15–22 — First Week’, title:‘Set up autopay & Nest app’,         desc:‘Enroll in autopay, connect Google Home.’,tags:[‘Auto-pay’,‘Nest’]},
+];
+return (
+<PageWrap>
+<PageHeader tag="05 — Utilities" title="Utilities Setup"
+intro="All utilities must be activated in your name before move-in on June 15, 2026." />
+<div className=“grid-2” style={{display:‘grid’,gridTemplateColumns:‘3fr 2fr’,gap:2,alignItems:‘start’}}>
+<div style={{display:‘grid’,gridTemplateColumns:‘1fr 1fr’,gap:2}}>
+{utils.map(u=>(
+<Panel key={u.name}>
+<div style={{fontSize:26,marginBottom:10}}>{u.icon}</div>
+<div style={{fontSize:14,fontWeight:500,marginBottom:3}}>{u.name}</div>
+<div style={{fontSize:11,color:‘var(–muted)’,marginBottom:14}}>{u.sub}</div>
+<div style={{borderTop:‘1px solid var(–border)’,paddingTop:12,display:‘flex’,flexDirection:‘column’,gap:6}}>
+{u.steps.map((s,i)=>(
+<div key={i} style={{display:‘flex’,gap:8,fontSize:11,color:‘var(–muted)’}}>
+<span style={{color:‘var(–accent)’,fontWeight:500,flexShrink:0}}>{i+1}.</span><span>{s}</span>
+</div>
+))}
+</div>
+{u.link && <div style={{marginTop:14}}><a href={u.link} target=”_blank” rel=“noreferrer”
+style={{fontSize:12,color:‘var(–accent-mid)’,textDecoration:‘none’,fontWeight:500,display:‘inline-flex’,alignItems:‘center’,gap:4}}>↗ {u.lbl}</a></div>}
+</Panel>
+))}
+</div>
 
-        <Panel style={{position:'sticky',top:100}}>
-          <Tag>Move-in Countdown</Tag>
-          <H2>Setup Timeline</H2>
-          <div style={{position:'relative',paddingLeft:26}}>
-            <div style={{position:'absolute',left:6,top:8,bottom:8,width:1,background:'var(--border)'}}></div>
-            {tl.map((t,i)=>(
-              <div key={i} style={{position:'relative',paddingBottom:22}}>
-                <div style={{position:'absolute',left:-20,top:4,width:14,height:14,borderRadius:'50%',
-                  background:t.done?'var(--accent)':t.now?'var(--accent2)':'var(--surface)',
-                  border:`2px solid ${t.done?'var(--accent)':t.now?'var(--accent2)':'var(--border)'}`,
-                  display:'flex',alignItems:'center',justifyContent:'center'}}>
-                  {(t.done||t.now) && <div style={{width:4,height:4,borderRadius:'50%',background:'white'}}></div>}
-                </div>
-                <div style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',marginBottom:2}}>{t.week}</div>
-                <div style={{fontSize:13,fontWeight:500,marginBottom:2}}>{t.title}</div>
-                <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5,marginBottom:5}}>{t.desc}</div>
-                <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
-                  {t.tags.map(tag=>(
-                    <span key={tag} style={{fontSize:9,letterSpacing:'0.08em',textTransform:'uppercase',padding:'2px 7px',border:'1px solid var(--border)',borderRadius:100,color:'var(--muted)'}}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Panel>
-      </div>
-    </PageWrap>
-  );
-}
-
-function PageWarranty({go}) {
-  return (
-    <PageWrap>
-      <PageHeader tag="06 — Home Warranty" title="Home Warranty"
-        intro="The property is covered by American Home Shield (AHS). Always notify Sebastien in writing first — do not contact AHS directly." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:2,alignItems:'start'}}>
-        <Panel>
-          <Tag>Coverage Summary</Tag>
-          <H2>What's Covered</H2>
-          {['HVAC systems (heating & cooling)','Plumbing systems','Electrical systems','Water heater','Built-in kitchen appliances','Washer & dryer','Pool & spa equipment (above-ground)'].map((c,i)=>(
-            <div key={i} style={{display:'flex',gap:10,padding:'9px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-              <span style={{color:'var(--accent)',flexShrink:0}}>✓</span><span>{c}</span>
+```
+    <Panel style={{position:'sticky',top:100}}>
+      <Tag>Move-in Countdown</Tag>
+      <H2>Setup Timeline</H2>
+      <div style={{position:'relative',paddingLeft:26}}>
+        <div style={{position:'absolute',left:6,top:8,bottom:8,width:1,background:'var(--border)'}}></div>
+        {tl.map((t,i)=>(
+          <div key={i} style={{position:'relative',paddingBottom:22}}>
+            <div style={{position:'absolute',left:-20,top:4,width:14,height:14,borderRadius:'50%',
+              background:t.done?'var(--accent)':t.now?'var(--accent2)':'var(--surface)',
+              border:`2px solid ${t.done?'var(--accent)':t.now?'var(--accent2)':'var(--border)'}`,
+              display:'flex',alignItems:'center',justifyContent:'center'}}>
+              {(t.done||t.now) && <div style={{width:4,height:4,borderRadius:'50%',background:'white'}}></div>}
             </div>
-          ))}
-          <div style={{marginTop:20}}>
-            <Tag color="#9B6A35">Not Covered</Tag>
-            {['Routine maintenance (filters, bulbs, batteries)','Cosmetic items with no functional impact','Tenant-caused damage','Pre-existing conditions'].map((c,i)=>(
-              <div key={i} style={{display:'flex',gap:10,padding:'8px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
-                <span style={{color:'#C0392B',flexShrink:0}}>✗</span><span style={{color:'var(--muted)'}}>{c}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{marginTop:20}}>
-            <InfoRow label="Provider" value="American Home Shield" />
-            <InfoRow label="AHS phone" value="888-429-8151 (Sebastien calls)" />
-          </div>
-        </Panel>
-        <div style={{display:'flex',flexDirection:'column',gap:2}}>
-          <Panel>
-            <Tag>How it Works</Tag>
-            <H2>Repair Process</H2>
-            <Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
-            <Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
-            <Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a contractor within 48 business hours." />
-            <Step n={4} title="Provide access" desc="Coordinate with the contractor; trip charges apply if missed." />
-          </Panel>
-          <Highlight>
-            <strong>Important:</strong> Do not call AHS directly or hire an outside contractor without Sebastien's prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
-          </Highlight>
-          <div style={{display:'flex',gap:10,flexWrap:'wrap',padding:'16px 0'}}>
-            <Btn onClick={()=>go('service')}>Submit Service Request →</Btn>
-            <Btn outline href="https://www.ahs.com">↗ AHS Website</Btn>
-          </div>
-        </div>
-      </div>
-    </PageWrap>
-  );
-}
-
-function PageEmergency() {
-  const contacts = [
-    {name:'911',role:'Police · Fire · Medical',phone:'911',note:'Life-threatening emergencies only',urgent:true,href:'tel:911'},
-    {name:'Sebastien Sellam',role:'Landlord — Property Emergencies',phone:'701-866-1887',note:'sellam@msn.com · Available 24/7',urgent:true,href:'tel:7018661887'},
-    {name:'Atmos Energy',role:'Natural Gas — Emergency',phone:'800-460-3030',note:'24/7 gas emergency line',urgent:false,href:'tel:18004603030'},
-    {name:'Oncor',role:'Electric Delivery — Outage',phone:'888-888-6099',note:'Report outages or downed power lines',urgent:false,href:'tel:18888886099'},
-    {name:'City of Plano',role:'Water / Wastewater',phone:'972-769-4150',note:'Water main breaks or sewer issues',urgent:false,href:'tel:9727694150'},
-    {name:'American Home Shield',role:'Home Warranty',phone:'888-429-8151',note:'Call Sebastien first before contacting AHS',urgent:false,href:'tel:18884298151'},
-  ];
-  return (
-    <PageWrap>
-      <PageHeader tag="07 — Emergency" title="Emergency Contacts"
-        intro="Save these numbers before you need them. For life-threatening situations, always call 911 first." />
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:2,marginBottom:24}}>
-        {contacts.map(c=>(
-          <div key={c.name} style={{background:c.urgent?'#FEF2F2':'var(--surface)',
-            border:`1px solid ${c.urgent?'#FCA5A5':'var(--border)'}`,padding:28,borderRadius:10}}>
-            <div style={{fontSize:16,fontWeight:600,marginBottom:4,letterSpacing:'-0.01em'}}>{c.name}</div>
-            <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.06em',color:c.urgent?'#DC2626':'var(--muted)',marginBottom:14,fontWeight:500}}>{c.role}</div>
-            <a href={c.href} style={{fontSize:18,fontWeight:700,color:'var(--accent)',textDecoration:'none',display:'block',marginBottom:6,letterSpacing:'-0.02em'}}>{c.phone}</a>
-            <div style={{fontSize:12,color:'var(--muted)'}}>{c.note}</div>
+            <div style={{fontSize:9,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--muted)',marginBottom:2}}>{t.week}</div>
+            <div style={{fontSize:13,fontWeight:500,marginBottom:2}}>{t.title}</div>
+            <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5,marginBottom:5}}>{t.desc}</div>
+            <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+              {t.tags.map(tag=>(
+                <span key={tag} style={{fontSize:9,letterSpacing:'0.08em',textTransform:'uppercase',padding:'2px 7px',border:'1px solid var(--border)',borderRadius:100,color:'var(--muted)'}}>{tag}</span>
+              ))}
+            </div>
           </div>
         ))}
       </div>
-      <Highlight>
-        <strong>Before move-in:</strong> Locate your main water shut-off valve (near the garage utility area) and your electrical panel (in the garage). Know how to operate both before you need them. Record their locations on Exhibit A at move-in.
-      </Highlight>
-    </PageWrap>
-  );
+    </Panel>
+  </div>
+</PageWrap>
+```
+
+);
+}
+
+function PageWarranty({go}) {
+return (
+<PageWrap>
+<PageHeader tag="06 — Home Warranty" title="Home Warranty"
+intro="The property is covered by American Home Shield (AHS). Always notify Sebastien in writing first — do not contact AHS directly." />
+<div className=“grid-2” style={{display:‘grid’,gridTemplateColumns:‘1fr 1fr’,gap:2,alignItems:‘start’}}>
+<Panel>
+<Tag>Coverage Summary</Tag>
+<H2>What’s Covered</H2>
+{[‘HVAC systems (heating & cooling)’,‘Plumbing systems’,‘Electrical systems’,‘Water heater’,‘Built-in kitchen appliances’,‘Washer & dryer’,‘Pool & spa equipment (above-ground)’].map((c,i)=>(
+<div key={i} style={{display:‘flex’,gap:10,padding:‘9px 0’,borderBottom:‘1px solid var(–border)’,fontSize:12}}>
+<span style={{color:‘var(–accent)’,flexShrink:0}}>✓</span><span>{c}</span>
+</div>
+))}
+<div style={{marginTop:20}}>
+<Tag color="#9B6A35">Not Covered</Tag>
+{[‘Routine maintenance (filters, bulbs, batteries)’,‘Cosmetic items with no functional impact’,‘Tenant-caused damage’,‘Pre-existing conditions’].map((c,i)=>(
+<div key={i} style={{display:‘flex’,gap:10,padding:‘8px 0’,borderBottom:‘1px solid var(–border)’,fontSize:12}}>
+<span style={{color:’#C0392B’,flexShrink:0}}>✗</span><span style={{color:‘var(–muted)’}}>{c}</span>
+</div>
+))}
+</div>
+<div style={{marginTop:20}}>
+<InfoRow label="Provider" value="American Home Shield" />
+<InfoRow label="AHS phone" value="888-429-8151 (Sebastien calls)" />
+</div>
+</Panel>
+<div style={{display:‘flex’,flexDirection:‘column’,gap:2}}>
+<Panel>
+<Tag>How it Works</Tag>
+<H2>Repair Process</H2>
+<Step n={1} title="Identify the issue" desc="Note the item, symptom, and when it started." />
+<Step n={2} title="Notify Sebastien in writing" desc="Text 701-866-1887 or email sellam@msn.com" />
+<Step n={3} title="Sebastien files AHS claim" desc="AHS dispatches a contractor within 48 business hours." />
+<Step n={4} title="Provide access" desc="Coordinate with the contractor; trip charges apply if missed." />
+</Panel>
+<Highlight>
+<strong>Important:</strong> Do not call AHS directly or hire an outside contractor without Sebastien’s prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
+</Highlight>
+<div style={{display:‘flex’,gap:10,flexWrap:‘wrap’,padding:‘16px 0’}}>
+<Btn onClick={()=>go(‘service’)}>Submit Service Request →</Btn>
+<Btn outline href="https://www.ahs.com">↗ AHS Website</Btn>
+</div>
+</div>
+</div>
+</PageWrap>
+);
+}
+
+function PageEmergency() {
+const contacts = [
+{name:‘911’,role:‘Police · Fire · Medical’,phone:‘911’,note:‘Life-threatening emergencies only’,urgent:true,href:‘tel:911’},
+{name:‘Sebastien Sellam’,role:‘Landlord — Property Emergencies’,phone:‘701-866-1887’,note:‘sellam@msn.com · Available 24/7’,urgent:true,href:‘tel:7018661887’},
+{name:‘Atmos Energy’,role:‘Natural Gas — Emergency’,phone:‘800-460-3030’,note:‘24/7 gas emergency line’,urgent:false,href:‘tel:18004603030’},
+{name:‘Oncor’,role:‘Electric Delivery — Outage’,phone:‘888-888-6099’,note:‘Report outages or downed power lines’,urgent:false,href:‘tel:18888886099’},
+{name:‘City of Plano’,role:‘Water / Wastewater’,phone:‘972-769-4150’,note:‘Water main breaks or sewer issues’,urgent:false,href:‘tel:9727694150’},
+{name:‘American Home Shield’,role:‘Home Warranty’,phone:‘888-429-8151’,note:‘Call Sebastien first before contacting AHS’,urgent:false,href:‘tel:18884298151’},
+];
+return (
+<PageWrap>
+<PageHeader tag="07 — Emergency" title="Emergency Contacts"
+intro="Save these numbers before you need them. For life-threatening situations, always call 911 first." />
+<div style={{display:‘grid’,gridTemplateColumns:‘repeat(auto-fit,minmax(260px,1fr))’,gap:2,marginBottom:24}}>
+{contacts.map(c=>(
+<div key={c.name} style={{background:c.urgent?’#FEF2F2’:‘var(–surface)’,
+border:`1px solid ${c.urgent?'#FCA5A5':'var(--border)'}`,padding:28,borderRadius:10}}>
+<div style={{fontSize:16,fontWeight:600,marginBottom:4,letterSpacing:’-0.01em’}}>{c.name}</div>
+<div style={{fontSize:11,textTransform:‘uppercase’,letterSpacing:‘0.06em’,color:c.urgent?’#DC2626’:‘var(–muted)’,marginBottom:14,fontWeight:500}}>{c.role}</div>
+<a href={c.href} style={{fontSize:18,fontWeight:700,color:‘var(–accent)’,textDecoration:‘none’,display:‘block’,marginBottom:6,letterSpacing:’-0.02em’}}>{c.phone}</a>
+<div style={{fontSize:12,color:‘var(–muted)’}}>{c.note}</div>
+</div>
+))}
+</div>
+<Highlight>
+<strong>Before move-in:</strong> Locate your main water shut-off valve (near the garage utility area) and your electrical panel (in the garage). Know how to operate both before you need them. Record their locations on Exhibit A at move-in.
+</Highlight>
+</PageWrap>
+);
 }
 
 function PageService() {
-  const categories = [
-    {icon:'🔧', title:'Plumbing', examples:'Leak, clog, no hot water, running toilet'},
-    {icon:'🌡️', title:'HVAC',    examples:'Heating, cooling, unusual noises, no airflow'},
-    {icon:'⚡', title:'Electrical', examples:'Outlet not working, tripped breaker, fixture'},
-    {icon:'🏊', title:'Pool / Spa', examples:'Equipment issue, water chemistry, pump problem'},
-    {icon:'🍳', title:'Appliances', examples:'Oven, fridge, dishwasher, washer/dryer'},
-    {icon:'🚗', title:'Garage',  examples:'Door not opening, opener issue'},
-    {icon:'🪲', title:'Pest / Wildlife', examples:'Insects, rodents, or animals in the home'},
-    {icon:'♨️', title:'Water Heater', examples:'No hot water, leaking tank, strange noises'},
-    {icon:'🚪', title:'Doors & Windows', examples:'Lock issue, broken seal, won\'t close properly'},
-  ];
+const categories = [
+{icon:‘🔧’, title:‘Plumbing’, examples:‘Leak, clog, no hot water, running toilet’},
+{icon:‘🌡️’, title:‘HVAC’,    examples:‘Heating, cooling, unusual noises, no airflow’},
+{icon:‘⚡’, title:‘Electrical’, examples:‘Outlet not working, tripped breaker, fixture’},
+{icon:‘🏊’, title:‘Pool / Spa’, examples:‘Equipment issue, water chemistry, pump problem’},
+{icon:‘🍳’, title:‘Appliances’, examples:‘Oven, fridge, dishwasher, washer/dryer’},
+{icon:‘🚗’, title:‘Garage’,  examples:‘Door not opening, opener issue’},
+{icon:‘🪲’, title:‘Pest / Wildlife’, examples:‘Insects, rodents, or animals in the home’},
+{icon:‘♨️’, title:‘Water Heater’, examples:‘No hot water, leaking tank, strange noises’},
+{icon:‘🚪’, title:‘Doors & Windows’, examples:‘Lock issue, broken seal, won't close properly’},
+];
 
-  return (
-    <PageWrap>
-      <PageHeader tag="08 — Maintenance" title="Maintenance Requests"
-        intro="For all non-emergency maintenance needs, follow the steps below. Most repairs covered by American Home Shield will be handled within 48 business hours." />
+return (
+<PageWrap>
+<PageHeader tag="08 — Maintenance" title="Maintenance Requests"
+intro="For all non-emergency maintenance needs, follow the steps below. Most repairs covered by American Home Shield will be handled within 48 business hours." />
 
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:24,alignItems:'start'}}>
+```
+  <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:24,alignItems:'start'}}>
 
-        {/* Left — process */}
-        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+    {/* Left — process */}
+    <div style={{display:'flex',flexDirection:'column',gap:16}}>
 
-          <Panel>
-            <Tag>How to Request a Repair</Tag>
-            <H2>Step-by-Step Process</H2>
-            <Step n={1} title="Describe the issue clearly"
-              desc="Note what's broken, when it started, and any steps you've already tried. Photos help — text them along with your message." />
-            <Step n={2} title="Text or email Sebastien"
-              desc="Send a written message to 701-866-1887 (text) or sellam@msn.com. Written requests are required under the lease and create a record for both parties." />
-            <Step n={3} title="Sebastien files the AHS claim"
-              desc="For covered items, Sebastien contacts American Home Shield who dispatches a licensed contractor — typically within 48 business hours." />
-            <Step n={4} title="Schedule access"
-              desc="The contractor will contact you directly to schedule. Please be available during the agreed window — missed visits may incur a trip charge." />
-            <Step n={5} title="Confirm the work is complete"
-              desc="Let Sebastien know once the repair is done. If the issue persists, follow up right away so a second visit can be arranged." />
-          </Panel>
+      <Panel>
+        <Tag>How to Request a Repair</Tag>
+        <H2>Step-by-Step Process</H2>
+        <Step n={1} title="Describe the issue clearly"
+          desc="Note what's broken, when it started, and any steps you've already tried. Photos help — text them along with your message." />
+        <Step n={2} title="Text or email Sebastien"
+          desc="Send a written message to 701-866-1887 (text) or sellam@msn.com. Written requests are required under the lease and create a record for both parties." />
+        <Step n={3} title="Sebastien files the AHS claim"
+          desc="For covered items, Sebastien contacts American Home Shield who dispatches a licensed contractor — typically within 48 business hours." />
+        <Step n={4} title="Schedule access"
+          desc="The contractor will contact you directly to schedule. Please be available during the agreed window — missed visits may incur a trip charge." />
+        <Step n={5} title="Confirm the work is complete"
+          desc="Let Sebastien know once the repair is done. If the issue persists, follow up right away so a second visit can be arranged." />
+      </Panel>
 
-          <Warn>
-            <strong style={{display:'block',marginBottom:6}}>⚠ Do not hire your own contractor</strong>
-            Do not call AHS directly or hire an outside contractor without Sebastien's prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
-          </Warn>
+      <Warn>
+        <strong style={{display:'block',marginBottom:6}}>⚠ Do not hire your own contractor</strong>
+        Do not call AHS directly or hire an outside contractor without Sebastien's prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
+      </Warn>
 
-          <Panel>
-            <Tag>What to Include in Your Message</Tag>
-            <H2>Message Template</H2>
-            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:20,fontFamily:'monospace',fontSize:12.5,lineHeight:1.9,color:'var(--text)'}}>
-              <div><strong>Hi Sebastien,</strong></div>
-              <div style={{marginTop:8}}>I'd like to report a maintenance issue:</div>
-              <div style={{marginTop:8,color:'var(--muted)'}}>
-                <div>📍 <strong>What:</strong> [describe the problem]</div>
-                <div>📅 <strong>When it started:</strong> [date or timeframe]</div>
-                <div>📸 <strong>Photos:</strong> [attached / texting separately]</div>
-                <div>🕐 <strong>Available for access:</strong> [days & hours]</div>
-              </div>
-              <div style={{marginTop:8}}>Thank you,</div>
-              <div>[Your name]</div>
-            </div>
-            <div style={{marginTop:16,display:'flex',gap:10,flexWrap:'wrap'}}>
-              <Btn href="sms:7018661887">💬 Text Sebastien</Btn>
-              <Btn outline href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail">✉ Email Sebastien</Btn>
-            </div>
-          </Panel>
-
-          <Panel>
-            <Tag>Common Issue Categories</Tag>
-            <H2>What's Typically Covered</H2>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:4}}>
-              {categories.map(c=>(
-                <div key={c.title} style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:14}}>
-                  <div style={{fontSize:20,marginBottom:6}}>{c.icon}</div>
-                  <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{c.title}</div>
-                  <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5}}>{c.examples}</div>
-                </div>
-              ))}
-            </div>
-          </Panel>
+      <Panel>
+        <Tag>What to Include in Your Message</Tag>
+        <H2>Message Template</H2>
+        <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:20,fontFamily:'monospace',fontSize:12.5,lineHeight:1.9,color:'var(--text)'}}>
+          <div><strong>Hi Sebastien,</strong></div>
+          <div style={{marginTop:8}}>I'd like to report a maintenance issue:</div>
+          <div style={{marginTop:8,color:'var(--muted)'}}>
+            <div>📍 <strong>What:</strong> [describe the problem]</div>
+            <div>📅 <strong>When it started:</strong> [date or timeframe]</div>
+            <div>📸 <strong>Photos:</strong> [attached / texting separately]</div>
+            <div>🕐 <strong>Available for access:</strong> [days & hours]</div>
+          </div>
+          <div style={{marginTop:8}}>Thank you,</div>
+          <div>[Your name]</div>
         </div>
-
-        {/* Right — contacts & times */}
-        <div style={{display:'flex',flexDirection:'column',gap:16,position:'sticky',top:100}}>
-          <Panel>
-            <Tag>Contact Sebastien</Tag>
-            <H2 mb={16}>Reach Out Directly</H2>
-            <div style={{display:'flex',flexDirection:'column',gap:10}}>
-              <a href="sms:7018661887" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--accent)',borderRadius:8,textDecoration:'none',color:'#fff',fontWeight:500,fontSize:14}}>
-                <span style={{fontSize:20}}>💬</span>
-                <div>
-                  <div style={{fontWeight:600}}>Text Message</div>
-                  <div style={{fontSize:12,opacity:.8}}>701-866-1887</div>
-                </div>
-              </a>
-              <a href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,textDecoration:'none',color:'var(--text)',fontWeight:500,fontSize:14}}>
-                <span style={{fontSize:20}}>✉️</span>
-                <div>
-                  <div style={{fontWeight:600}}>Email</div>
-                  <div style={{fontSize:12,color:'var(--muted)'}}>sellam@msn.com</div>
-                </div>
-              </a>
-            </div>
-          </Panel>
-
-          <Panel>
-            <Tag>Response Times</Tag>
-            <H2 mb={12}>What to Expect</H2>
-            <InfoRow label="🔴 Urgent issues" value="Same day response" />
-            <InfoRow label="🟡 Soon — within a week" value="Within 24 hrs" />
-            <InfoRow label="🟢 Routine requests" value="Within 48 hrs" />
-            <InfoRow label="AHS contractor dispatch" value="48 hrs (business hrs)" />
-          </Panel>
-
-          <Highlight>
-            <strong>Emergency?</strong> For safety threats — gas leak, flooding, electrical hazard — call <strong>701-866-1887</strong> immediately or <strong>911</strong> if there is risk to life. Do not wait for a text reply.
-          </Highlight>
-
-          <Panel>
-            <Tag>AHS Coverage</Tag>
-            <H2 mb={12}>Home Warranty</H2>
-            <InfoRow label="Provider" value="American Home Shield" />
-            <InfoRow label="AHS phone" value="888-429-8151" />
-            <div style={{marginTop:12,fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
-              Contact Sebastien first. He will file the claim and coordinate the contractor on your behalf.
-            </div>
-          </Panel>
+        <div style={{marginTop:16,display:'flex',gap:10,flexWrap:'wrap'}}>
+          <Btn href="sms:7018661887">💬 Text Sebastien</Btn>
+          <Btn outline href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail">✉ Email Sebastien</Btn>
         </div>
+      </Panel>
 
-      </div>
-    </PageWrap>
-  );
+      <Panel>
+        <Tag>Common Issue Categories</Tag>
+        <H2>What's Typically Covered</H2>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:4}}>
+          {categories.map(c=>(
+            <div key={c.title} style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:14}}>
+              <div style={{fontSize:20,marginBottom:6}}>{c.icon}</div>
+              <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{c.title}</div>
+              <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5}}>{c.examples}</div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    </div>
+
+    {/* Right — contacts & times */}
+    <div style={{display:'flex',flexDirection:'column',gap:16,position:'sticky',top:100}}>
+      <Panel>
+        <Tag>Contact Sebastien</Tag>
+        <H2 mb={16}>Reach Out Directly</H2>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <a href="sms:7018661887" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--accent)',borderRadius:8,textDecoration:'none',color:'#fff',fontWeight:500,fontSize:14}}>
+            <span style={{fontSize:20}}>💬</span>
+            <div>
+              <div style={{fontWeight:600}}>Text Message</div>
+              <div style={{fontSize:12,opacity:.8}}>701-866-1887</div>
+            </div>
+          </a>
+          <a href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,textDecoration:'none',color:'var(--text)',fontWeight:500,fontSize:14}}>
+            <span style={{fontSize:20}}>✉️</span>
+            <div>
+              <div style={{fontWeight:600}}>Email</div>
+              <div style={{fontSize:12,color:'var(--muted)'}}>sellam@msn.com</div>
+            </div>
+          </a>
+        </div>
+      </Panel>
+
+      <Panel>
+        <Tag>Response Times</Tag>
+        <H2 mb={12}>What to Expect</H2>
+        <InfoRow label="🔴 Urgent issues" value="Same day response" />
+        <InfoRow label="🟡 Soon — within a week" value="Within 24 hrs" />
+        <InfoRow label="🟢 Routine requests" value="Within 48 hrs" />
+        <InfoRow label="AHS contractor dispatch" value="48 hrs (business hrs)" />
+      </Panel>
+
+      <Highlight>
+        <strong>Emergency?</strong> For safety threats — gas leak, flooding, electrical hazard — call <strong>701-866-1887</strong> immediately or <strong>911</strong> if there is risk to life. Do not wait for a text reply.
+      </Highlight>
+
+      <Panel>
+        <Tag>AHS Coverage</Tag>
+        <H2 mb={12}>Home Warranty</H2>
+        <InfoRow label="Provider" value="American Home Shield" />
+        <InfoRow label="AHS phone" value="888-429-8151" />
+        <div style={{marginTop:12,fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
+          Contact Sebastien first. He will file the claim and coordinate the contractor on your behalf.
+        </div>
+      </Panel>
+    </div>
+
+  </div>
+</PageWrap>
+```
+
+);
 }
 
 /* ══ SHELL ══ */
 const PAGES = [
-  {id:'home',       label:'Home'},
-  {id:'smart-home', label:'Smart Home'},
-  {id:'pool',       label:'Pool & Spa'},
-  {id:'hvac',       label:'HVAC'},
-  {id:'utilities',  label:'Utilities'},
-  {id:'warranty',   label:'Warranty'},
-  {id:'emergency',  label:'Emergency'},
-  {id:'service',    label:'Maintenance'},
+{id:‘home’,       label:‘Home’},
+{id:‘smart-home’, label:‘Smart Home’},
+{id:‘pool’,       label:‘Pool & Spa’},
+{id:‘hvac’,       label:‘HVAC’},
+{id:‘utilities’,  label:‘Utilities’},
+{id:‘warranty’,   label:‘Warranty’},
+{id:‘emergency’,  label:‘Emergency’},
+{id:‘service’,    label:‘Maintenance’},
 ];
 
 function App() {
-  const [page, setPage] = useState('home');
-  const go = id => { setPage(id); window.scrollTo({top:0,behavior:'smooth'}); };
+const [page, setPage] = useState(‘home’);
+const go = id => { setPage(id); window.scrollTo({top:0,behavior:‘smooth’}); };
 
-  const Page = () => {
-    switch(page) {
-      case 'home':       return <PageHome go={go} />;
-      case 'smart-home': return <PageSmartHome />;
-      case 'pool':       return <PagePool />;
-      case 'hvac':       return <PageHVAC go={go} />;
-      case 'utilities':  return <PageUtilities />;
-      case 'warranty':   return <PageWarranty go={go} />;
-      case 'emergency':  return <PageEmergency />;
-      case 'service':    return <PageService />;
-      default:           return <PageHome go={go} />;
-    }
-  };
+const Page = () => {
+switch(page) {
+case ‘home’:       return <PageHome go={go} />;
+case ‘smart-home’: return <PageSmartHome />;
+case ‘pool’:       return <PagePool />;
+case ‘hvac’:       return <PageHVAC go={go} />;
+case ‘utilities’:  return <PageUtilities />;
+case ‘warranty’:   return <PageWarranty go={go} />;
+case ‘emergency’:  return <PageEmergency />;
+case ‘service’:    return <PageService />;
+default:           return <PageHome go={go} />;
+}
+};
 
-  return (
-    <div>
-      {/* HEADER */}
-      <header style={{position:'sticky',top:0,zIndex:100,background:'#fff',borderBottom:'1px solid var(--border)',
-        padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between',
-        boxShadow:'0 1px 0 var(--border)'}}>
-        <div onClick={()=>go('home')} style={{cursor:'pointer',flexShrink:0}}>
-          <div style={{fontSize:15,fontWeight:700,color:'var(--text)',letterSpacing:'-0.02em'}}>3405 Sandy Trail Lane</div>
-          <div style={{fontSize:11,color:'var(--muted)',fontWeight:400,marginTop:1}}>Resident Portal · Plano TX 75023</div>
-        </div>
-        <nav className="nav-full" style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
-          {PAGES.map(p=>(
-            <button key={p.id} onClick={()=>go(p.id)}
-              style={{fontFamily:'var(--sans)',fontSize:13,fontWeight:500,
-                background:page===p.id?'var(--accent-light)':'none',
-                border:'none',cursor:'pointer',padding:'6px 12px',borderRadius:6,
-                color:page===p.id?'var(--accent)':'var(--muted)',
-                transition:'all .15s'}}>
-              {p.label}
-            </button>
-          ))}
-        </nav>
-      </header>
+return (
+<div>
+{/* HEADER */}
+<header style={{position:‘sticky’,top:0,zIndex:100,background:’#fff’,borderBottom:‘1px solid var(–border)’,
+padding:‘0 48px’,height:64,display:‘flex’,alignItems:‘center’,justifyContent:‘space-between’,
+boxShadow:‘0 1px 0 var(–border)’}}>
+<div onClick={()=>go(‘home’)} style={{cursor:‘pointer’,flexShrink:0}}>
+<div style={{fontSize:15,fontWeight:700,color:‘var(–text)’,letterSpacing:’-0.02em’}}>3405 Sandy Trail Lane</div>
+<div style={{fontSize:11,color:‘var(–muted)’,fontWeight:400,marginTop:1}}>Resident Portal · Plano TX 75023</div>
+</div>
+<nav className=“nav-full” style={{display:‘flex’,gap:4,alignItems:‘center’,flexWrap:‘wrap’}}>
+{PAGES.map(p=>(
+<button key={p.id} onClick={()=>go(p.id)}
+style={{fontFamily:‘var(–sans)’,fontSize:13,fontWeight:500,
+background:page===p.id?‘var(–accent-light)’:‘none’,
+border:‘none’,cursor:‘pointer’,padding:‘6px 12px’,borderRadius:6,
+color:page===p.id?‘var(–accent)’:‘var(–muted)’,
+transition:‘all .15s’}}>
+{p.label}
+</button>
+))}
+</nav>
+</header>
 
-      {/* EMERGENCY BAR */}
-      <div className="emergency-bar" style={{background:'var(--accent)',color:'#fff',padding:'11px 48px',
-        display:'flex',alignItems:'center',gap:14}}>
-        <div style={{width:7,height:7,borderRadius:'50%',background:'#FCA5A5',flexShrink:0,animation:'pulse 2s infinite'}}></div>
-        <span style={{fontSize:12,flex:1,fontWeight:400}}>
-          <strong style={{color:'#FCA5A5',fontWeight:600}}>Emergency:</strong> Sebastien — 701-866-1887 &nbsp;·&nbsp; Gas/Fire: 911 &nbsp;·&nbsp; Atmos: 800-460-3030
-        </span>
-        <button onClick={()=>go('emergency')}
-          style={{fontFamily:'var(--sans)',fontSize:12,fontWeight:500,
-            color:'rgba(255,255,255,0.85)',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.2)',
-            padding:'5px 12px',borderRadius:5,cursor:'pointer',flexShrink:0}}>All Contacts →</button>
-      </div>
+```
+  {/* EMERGENCY BAR */}
+  <div className="emergency-bar" style={{background:'var(--accent)',color:'#fff',padding:'11px 48px',
+    display:'flex',alignItems:'center',gap:14}}>
+    <div style={{width:7,height:7,borderRadius:'50%',background:'#FCA5A5',flexShrink:0,animation:'pulse 2s infinite'}}></div>
+    <span style={{fontSize:12,flex:1,fontWeight:400}}>
+      <strong style={{color:'#FCA5A5',fontWeight:600}}>Emergency:</strong> Sebastien — 701-866-1887 &nbsp;·&nbsp; Gas/Fire: 911 &nbsp;·&nbsp; Atmos: 800-460-3030
+    </span>
+    <button onClick={()=>go('emergency')}
+      style={{fontFamily:'var(--sans)',fontSize:12,fontWeight:500,
+        color:'rgba(255,255,255,0.85)',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.2)',
+        padding:'5px 12px',borderRadius:5,cursor:'pointer',flexShrink:0}}>All Contacts →</button>
+  </div>
 
-      {/* PAGE */}
-      <div key={page} className="fade"><Page /></div>
+  {/* PAGE */}
+  <div key={page} className="fade"><Page /></div>
 
-      {/* FOOTER */}
-      <footer style={{borderTop:'1px solid var(--border)',padding:'20px 48px',
-        display:'flex',justifyContent:'space-between',color:'var(--muted)',fontSize:12,flexWrap:'wrap',gap:8,background:'var(--surface2)'}}>
-        <span>3405 Sandy Trail Lane · Plano, TX 75023 · Carriage Hill Subdivision</span>
-        <span>Resident Portal · Updated May 2026</span>
-      </footer>
-    </div>
-  );
+  {/* FOOTER */}
+  <footer style={{borderTop:'1px solid var(--border)',padding:'20px 48px',
+    display:'flex',justifyContent:'space-between',color:'var(--muted)',fontSize:12,flexWrap:'wrap',gap:8,background:'var(--surface2)'}}>
+    <span>3405 Sandy Trail Lane · Plano, TX 75023 · Carriage Hill Subdivision</span>
+    <span>Resident Portal · Updated May 2026</span>
+  </footer>
+</div>
+```
+
+);
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById(‘root’)).render(<App />);
 </script>
+
 </body>
 </html>
