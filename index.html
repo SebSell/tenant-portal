@@ -124,7 +124,7 @@ function PageHome({go}) {
     {id:'utilities', icon:'🔌',title:'Utilities',  desc:'Setup instructions and move-in timeline'},
     {id:'warranty',  icon:'🛡️',title:'Home Warranty',desc:'AHS coverage and how to request repairs'},
     {id:'emergency', icon:'🚨',title:'Emergency',  desc:'Key contacts for urgent situations'},
-    {id:'service',   icon:'🔧',title:'Service Request',desc:'Submit a maintenance request with photos'},
+    {id:'service',   icon:'🔧',title:'Maintenance',desc:'How to request a repair and what to expect'},
   ];
   return (
     <PageWrap>
@@ -559,211 +559,131 @@ function PageEmergency() {
 }
 
 function PageService() {
-  const [files, setFiles] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
-  const [drag, setDrag] = useState(false);
-  const [form, setForm] = useState({
-    name:'', contact:'', category:'', urgency:'routine',
-    description:'', days:'', hours:''
-  });
-
-  const set = k => e => setForm(f=>({...f,[k]:e.target.value}));
-
-  const addFiles = (newFiles) => {
-    Array.from(newFiles).filter(f=>f.type.startsWith('image/')).slice(0, 5 - files.length).forEach(f => {
-      const reader = new FileReader();
-      reader.onload = e => setFiles(prev => prev.length < 5 ? [...prev, {id:Date.now()+Math.random(), src:e.target.result, name:f.name}] : prev);
-      reader.readAsDataURL(f);
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    setError('');
-
-    const urgencyLabel = {routine:'🟢 Routine — no rush', soon:'🟡 Soon — within a week', urgent:'🔴 Urgent — affecting daily life'}[form.urgency];
-    const photoNote = files.length > 0 ? `${files.length} photo(s) attached (see below)` : 'No photos attached';
-
-    const body = `
-NEW SERVICE REQUEST — 3405 Sandy Trail Lane
-============================================
-
-Tenant Name:     ${form.name}
-Contact:         ${form.contact}
-Category:        ${form.category}
-Urgency:         ${urgencyLabel}
-
-Description:
-${form.description}
-
-Preferred Access:
-  Days:  ${form.days || 'Not specified'}
-  Hours: ${form.hours || 'Not specified'}
-
-Photos: ${photoNote}
-============================================
-Submitted via Resident Portal
-    `.trim();
-
-    try {
-      const res = await fetch('https://formspree.io/f/xpwzgqkv', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json', 'Accept':'application/json'},
-        body: JSON.stringify({
-          _replyto: form.contact,
-          _subject: `[${form.urgency.toUpperCase()}] Service Request — ${form.category} — ${form.name}`,
-          message: body,
-          name: form.name,
-          contact: form.contact,
-          category: form.category,
-          urgency: urgencyLabel,
-          description: form.description,
-          preferred_days: form.days,
-          preferred_hours: form.hours,
-          photos_count: files.length,
-        })
-      });
-      if(res.ok) {
-        setSubmitted(true);
-      } else {
-        const data = await res.json();
-        setError(data?.errors?.[0]?.message || 'Something went wrong. Please call 701-866-1887 directly.');
-      }
-    } catch(err) {
-      setError('Could not send. Please call Sebastien at 701-866-1887.');
-    }
-    setSending(false);
-  };
-
-  if(submitted) return (
-    <PageWrap>
-      <div style={{maxWidth:500,margin:'40px auto',textAlign:'center'}}>
-        <div style={{fontSize:52,marginBottom:24}}>✅</div>
-        <H2>Request Submitted</H2>
-        <Muted style={{marginBottom:28}}>Sebastien has been notified at sellam@msn.com and will follow up within 24 hours. For urgent issues call <strong>701-866-1887</strong> directly.</Muted>
-        <Btn onClick={()=>{setSubmitted(false);setForm({name:'',contact:'',category:'',urgency:'routine',description:'',days:'',hours:''});setFiles([]);}}>Submit Another Request</Btn>
-      </div>
-    </PageWrap>
-  );
-
-  const inp = {fontFamily:'var(--sans)',fontSize:13,background:'#fff',border:'1px solid var(--border)',color:'var(--text)',padding:'10px 14px',borderRadius:6,width:'100%'};
-  const lbl = {fontSize:12,color:'var(--muted)',fontWeight:500,display:'block',marginBottom:6};
+  const categories = [
+    {icon:'🔧', title:'Plumbing', examples:'Leak, clog, no hot water, running toilet'},
+    {icon:'🌡️', title:'HVAC',    examples:'Heating, cooling, unusual noises, no airflow'},
+    {icon:'⚡', title:'Electrical', examples:'Outlet not working, tripped breaker, fixture'},
+    {icon:'🏊', title:'Pool / Spa', examples:'Equipment issue, water chemistry, pump problem'},
+    {icon:'🍳', title:'Appliances', examples:'Oven, fridge, dishwasher, washer/dryer'},
+    {icon:'🚗', title:'Garage',  examples:'Door not opening, opener issue'},
+    {icon:'🪲', title:'Pest / Wildlife', examples:'Insects, rodents, or animals in the home'},
+    {icon:'♨️', title:'Water Heater', examples:'No hot water, leaking tank, strange noises'},
+    {icon:'🚪', title:'Doors & Windows', examples:'Lock issue, broken seal, won\'t close properly'},
+  ];
 
   return (
     <PageWrap>
-      <PageHeader tag="08 — Service Request" title="Submit a Service Request"
-        intro="For non-emergency maintenance issues only. Sebastien will respond within 24 hours. For emergencies, call 701-866-1887 directly." />
-      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:32,alignItems:'start'}}>
-        <form onSubmit={handleSubmit}>
+      <PageHeader tag="08 — Maintenance" title="Maintenance Requests"
+        intro="For all non-emergency maintenance needs, follow the steps below. Most repairs covered by American Home Shield will be handled within 48 business hours." />
 
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
-            <div><label style={lbl}>Your Name</label>
-              <input required style={inp} placeholder="Robert or Sayde Agron" value={form.name} onChange={set('name')} /></div>
-            <div><label style={lbl}>Phone / Email</label>
-              <input required style={inp} placeholder="For follow-up" value={form.contact} onChange={set('contact')} /></div>
-          </div>
+      <div className="grid-2" style={{display:'grid',gridTemplateColumns:'3fr 2fr',gap:24,alignItems:'start'}}>
 
-          <div style={{marginBottom:20}}>
-            <label style={lbl}>Category</label>
-            <select required style={{...inp,appearance:'none',cursor:'pointer'}} value={form.category} onChange={set('category')}>
-              <option value="">Select a category…</option>
-              {['Plumbing (leak, clog, no hot water)','HVAC (heating / cooling / filter)','Electrical (outlet, breaker, fixture)','Pool / Spa','Appliances (oven, fridge, dishwasher, W/D)','Garage door / openers','Doors, windows, locks','Pest / wildlife','Water heater','Other'].map(o=><option key={o}>{o}</option>)}
-            </select>
-          </div>
+        {/* Left — process */}
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
 
-          <div style={{marginBottom:20}}>
-            <label style={lbl}>Urgency</label>
-            <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-              {[['routine','🟢 Routine'],['soon','🟡 Soon — within a week'],['urgent','🔴 Urgent — affecting daily life']].map(([v,l])=>(
-                <label key={v} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'8px 14px',
-                  border:`1px solid ${form.urgency===v?'var(--accent)':'var(--border)'}`,
-                  borderRadius:6,fontSize:13,cursor:'pointer',fontWeight:500,
-                  color:form.urgency===v?'var(--accent)':'var(--muted)',
-                  background:form.urgency===v?'var(--accent-light)':'transparent',
-                  transition:'all .15s'}}>
-                  <input type="radio" name="urgency" value={v} checked={form.urgency===v}
-                    onChange={set('urgency')} style={{display:'none'}}/>{l}
-                </label>
+          <Panel>
+            <Tag>How to Request a Repair</Tag>
+            <H2>Step-by-Step Process</H2>
+            <Step n={1} title="Describe the issue clearly"
+              desc="Note what's broken, when it started, and any steps you've already tried. Photos help — text them along with your message." />
+            <Step n={2} title="Text or email Sebastien"
+              desc="Send a written message to 701-866-1887 (text) or sellam@msn.com. Written requests are required under the lease and create a record for both parties." />
+            <Step n={3} title="Sebastien files the AHS claim"
+              desc="For covered items, Sebastien contacts American Home Shield who dispatches a licensed contractor — typically within 48 business hours." />
+            <Step n={4} title="Schedule access"
+              desc="The contractor will contact you directly to schedule. Please be available during the agreed window — missed visits may incur a trip charge." />
+            <Step n={5} title="Confirm the work is complete"
+              desc="Let Sebastien know once the repair is done. If the issue persists, follow up right away so a second visit can be arranged." />
+          </Panel>
+
+          <Warn>
+            <strong style={{display:'block',marginBottom:6}}>⚠ Do not hire your own contractor</strong>
+            Do not call AHS directly or hire an outside contractor without Sebastien's prior written approval. Unauthorized repairs will not be reimbursed and may violate the lease.
+          </Warn>
+
+          <Panel>
+            <Tag>What to Include in Your Message</Tag>
+            <H2>Message Template</H2>
+            <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:20,fontFamily:'monospace',fontSize:12.5,lineHeight:1.9,color:'var(--text)'}}>
+              <div><strong>Hi Sebastien,</strong></div>
+              <div style={{marginTop:8}}>I'd like to report a maintenance issue:</div>
+              <div style={{marginTop:8,color:'var(--muted)'}}>
+                <div>📍 <strong>What:</strong> [describe the problem]</div>
+                <div>📅 <strong>When it started:</strong> [date or timeframe]</div>
+                <div>📸 <strong>Photos:</strong> [attached / texting separately]</div>
+                <div>🕐 <strong>Available for access:</strong> [days & hours]</div>
+              </div>
+              <div style={{marginTop:8}}>Thank you,</div>
+              <div>[Your name]</div>
+            </div>
+            <div style={{marginTop:16,display:'flex',gap:10,flexWrap:'wrap'}}>
+              <Btn href="sms:7018661887">💬 Text Sebastien</Btn>
+              <Btn outline href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail">✉ Email Sebastien</Btn>
+            </div>
+          </Panel>
+
+          <Panel>
+            <Tag>Common Issue Categories</Tag>
+            <H2>What's Typically Covered</H2>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:4}}>
+              {categories.map(c=>(
+                <div key={c.title} style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:14}}>
+                  <div style={{fontSize:20,marginBottom:6}}>{c.icon}</div>
+                  <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>{c.title}</div>
+                  <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.5}}>{c.examples}</div>
+                </div>
               ))}
             </div>
-          </div>
-
-          <div style={{marginBottom:20}}>
-            <label style={lbl}>Description of the Problem</label>
-            <textarea required rows={5} style={{...inp,resize:'vertical',lineHeight:1.6}}
-              placeholder="Describe what's happening, when it started, and any steps already taken. The more detail, the faster we can help."
-              value={form.description} onChange={set('description')} />
-          </div>
-
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:20}}>
-            <div><label style={lbl}>Preferred Days</label>
-              <input style={inp} placeholder="e.g. Mon–Wed" value={form.days} onChange={set('days')} /></div>
-            <div><label style={lbl}>Preferred Hours</label>
-              <input style={inp} placeholder="e.g. 9 AM – 12 PM" value={form.hours} onChange={set('hours')} /></div>
-          </div>
-
-          <div style={{marginBottom:28}}>
-            <label style={lbl}>Photos (optional · up to 5)</label>
-            <div onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)}
-              onDrop={e=>{e.preventDefault();setDrag(false);addFiles(e.dataTransfer.files);}}
-              style={{position:'relative',border:`1.5px dashed ${drag?'var(--accent2)':'var(--border)'}`,borderRadius:8,padding:28,
-                textAlign:'center',background:drag?'var(--accent-light)':'var(--surface2)',transition:'all .15s',cursor:'pointer'}}>
-              <input type="file" accept="image/*" multiple onChange={e=>addFiles(e.target.files)}
-                style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',width:'100%',height:'100%'}} />
-              <div style={{fontSize:28,marginBottom:8}}>📷</div>
-              <div style={{fontSize:13,color:'var(--muted)'}}><strong style={{color:'var(--accent-mid)'}}>Click to upload</strong> or drag & drop · JPG, PNG, HEIC · Max 5 images</div>
-            </div>
-            {files.length > 0 && (
-              <div style={{display:'flex',gap:10,flexWrap:'wrap',marginTop:12}}>
-                {files.map(f=>(
-                  <div key={f.id} style={{position:'relative',width:80,height:80,borderRadius:6,overflow:'hidden',border:'1px solid var(--border)',flexShrink:0}}>
-                    <img src={f.src} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
-                    <button type="button" onClick={()=>setFiles(p=>p.filter(x=>x.id!==f.id))}
-                      style={{position:'absolute',top:3,right:3,width:18,height:18,background:'rgba(0,0,0,.6)',border:'none',borderRadius:'50%',color:'white',fontSize:10,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
-                  </div>
-                ))}
-              </div>
-            )}
-            {files.length > 0 && (
-              <div style={{marginTop:8,fontSize:11,color:'var(--muted)'}}>
-                ⚠ Photos are previewed here. Due to email size limits, photo filenames are noted in the email. For large files, follow up by texting photos to 701-866-1887.
-              </div>
-            )}
-          </div>
-
-          {error && (
-            <div style={{marginBottom:16,padding:'12px 16px',background:'#FEF2F2',border:'1px solid #FCA5A5',borderRadius:6,fontSize:13,color:'#DC2626'}}>
-              {error}
-            </div>
-          )}
-
-          <div style={{display:'flex',alignItems:'center',gap:16,flexWrap:'wrap'}}>
-            <Btn>{sending ? 'Sending…' : 'Submit Request →'}</Btn>
-            {!sending && <span style={{fontSize:11,color:'var(--muted)'}}>Sent to sellam@msn.com</span>}
-          </div>
-        </form>
-
-        <div style={{display:'flex',flexDirection:'column',gap:16}}>
-          <Highlight>
-            <strong>AHS reminder:</strong> For issues covered by American Home Shield, this form triggers Sebastien to file a claim. Do not call AHS directly or hire contractors without prior written approval.
-          </Highlight>
-          <Panel>
-            <div style={{fontFamily:'var(--serif)',fontSize:16,marginBottom:14}}>Need it faster?</div>
-            <InfoRow label="Call Sebastien" value="701-866-1887" />
-            <InfoRow label="Email" value="sellam@msn.com" />
-            <InfoRow label="Emergency" value="911" />
-            <InfoRow label="Atmos Gas" value="800-460-3030" />
-          </Panel>
-          <Panel>
-            <div style={{fontFamily:'var(--serif)',fontSize:16,marginBottom:14}}>Response times</div>
-            <InfoRow label="Urgent requests" value="Same day" />
-            <InfoRow label="Routine requests" value="Within 24 hrs" />
-            <InfoRow label="AHS dispatch" value="48 hrs (business hrs)" />
           </Panel>
         </div>
+
+        {/* Right — contacts & times */}
+        <div style={{display:'flex',flexDirection:'column',gap:16,position:'sticky',top:100}}>
+          <Panel>
+            <Tag>Contact Sebastien</Tag>
+            <H2 mb={16}>Reach Out Directly</H2>
+            <div style={{display:'flex',flexDirection:'column',gap:10}}>
+              <a href="sms:7018661887" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--accent)',borderRadius:8,textDecoration:'none',color:'#fff',fontWeight:500,fontSize:14}}>
+                <span style={{fontSize:20}}>💬</span>
+                <div>
+                  <div style={{fontWeight:600}}>Text Message</div>
+                  <div style={{fontSize:12,opacity:.8}}>701-866-1887</div>
+                </div>
+              </a>
+              <a href="mailto:sellam@msn.com?subject=Maintenance Request — 3405 Sandy Trail" style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,textDecoration:'none',color:'var(--text)',fontWeight:500,fontSize:14}}>
+                <span style={{fontSize:20}}>✉️</span>
+                <div>
+                  <div style={{fontWeight:600}}>Email</div>
+                  <div style={{fontSize:12,color:'var(--muted)'}}>sellam@msn.com</div>
+                </div>
+              </a>
+            </div>
+          </Panel>
+
+          <Panel>
+            <Tag>Response Times</Tag>
+            <H2 mb={12}>What to Expect</H2>
+            <InfoRow label="🔴 Urgent issues" value="Same day response" />
+            <InfoRow label="🟡 Soon — within a week" value="Within 24 hrs" />
+            <InfoRow label="🟢 Routine requests" value="Within 48 hrs" />
+            <InfoRow label="AHS contractor dispatch" value="48 hrs (business hrs)" />
+          </Panel>
+
+          <Highlight>
+            <strong>Emergency?</strong> For safety threats — gas leak, flooding, electrical hazard — call <strong>701-866-1887</strong> immediately or <strong>911</strong> if there is risk to life. Do not wait for a text reply.
+          </Highlight>
+
+          <Panel>
+            <Tag>AHS Coverage</Tag>
+            <H2 mb={12}>Home Warranty</H2>
+            <InfoRow label="Provider" value="American Home Shield" />
+            <InfoRow label="AHS phone" value="888-429-8151" />
+            <div style={{marginTop:12,fontSize:12,color:'var(--muted)',lineHeight:1.6}}>
+              Contact Sebastien first. He will file the claim and coordinate the contractor on your behalf.
+            </div>
+          </Panel>
+        </div>
+
       </div>
     </PageWrap>
   );
@@ -778,7 +698,7 @@ const PAGES = [
   {id:'utilities',  label:'Utilities'},
   {id:'warranty',   label:'Warranty'},
   {id:'emergency',  label:'Emergency'},
-  {id:'service',    label:'Service Request'},
+  {id:'service',    label:'Maintenance'},
 ];
 
 function App() {
