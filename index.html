@@ -206,7 +206,7 @@ function PagePool() {
     {n:2,rpm:'3,000 RPM',time:'3:00 PM – 4:00 PM', purpose:'Afternoon Skimming',auto:true,pct:87},
     {n:3,rpm:'2,000 RPM',time:'1 hr on demand',     purpose:'Chemical Distribution',auto:false,pct:58},
     {n:4,rpm:'3,450 RPM',time:'On demand',           purpose:'Spa Mode',auto:false,pct:100},
-    {n:5,rpm:'3,450 RPM',time:'6:30 AM – 7:00 AM',  purpose:'Morning Purge',auto:true,pct:100},
+    {n:5,rpm:'3,450 RPM',time:'6:00 AM – 6:30 AM',  purpose:'Morning Purge',auto:true,pct:100},
   ];
   return (
     <PageWrap>
@@ -251,6 +251,84 @@ function PagePool() {
               ))}
             </div>
             <div style={{marginTop:20}}><Btn outline href="https://www.pentair.com">↗ Pentair Manual</Btn></div>
+          </Panel>
+
+          {/* ── VALVE CONFIGURATION ── */}
+          <Panel>
+            <Tag>Valve Configuration</Tag>
+            <H2>Intake & Return Valves</H2>
+
+            {/* Normal / Pool mode */}
+            <div style={{marginBottom:20}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+                <div style={{background:'var(--accent-light)',border:'1px solid #BFCFE8',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'var(--accent)',flexShrink:0}}>🏊 Pool Mode</div>
+                <span style={{fontSize:11,color:'var(--muted)'}}>Normal daily use</span>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
+                  {[['Skimmer','Open'],['Pool','Open'],['Vac','Open'],['Spa','Closed']].map(([v,s])=>(
+                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                      <span style={{color:'var(--text)'}}>{v}</span>
+                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
+                  {[['Pool','Open'],['Spa','Open']].map(([v,s])=>(
+                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                      <span style={{color:'var(--text)'}}>{v}</span>
+                      <span style={{fontSize:11,fontWeight:600,color:'var(--accent)',background:'var(--accent-light)',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Spa mode */}
+            <div style={{borderTop:'1px solid var(--border)',paddingTop:20}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+                <div style={{background:'#FDF3E7',border:'1px solid #F0C070',borderRadius:6,padding:'4px 12px',fontSize:11,fontWeight:600,color:'#92400E',flexShrink:0}}>🛁 Spa Mode</div>
+                <span style={{fontSize:11,color:'var(--muted)'}}>Switch valves before running spa</span>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Intake Valves</div>
+                  {[['Skimmer','Closed'],['Pool','Closed'],['Vac','Closed'],['Spa','Open']].map(([v,s])=>(
+                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                      <span style={{color:'var(--text)'}}>{v}</span>
+                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{background:'var(--surface2)',border:'1px solid var(--border)',borderRadius:8,padding:16}}>
+                  <div style={{fontSize:10,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--muted)',fontWeight:600,marginBottom:10}}>Return Valves</div>
+                  {[['Pool','Closed'],['Spa','Open']].map(([v,s])=>(
+                    <div key={v} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'6px 0',borderBottom:'1px solid var(--border)',fontSize:12}}>
+                      <span style={{color:'var(--text)'}}>{v}</span>
+                      <span style={{fontSize:11,fontWeight:600,color:s==='Open'?'var(--accent)':'#DC2626',background:s==='Open'?'var(--accent-light)':'#FEF2F2',padding:'2px 8px',borderRadius:4}}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Panel>
+
+          {/* ── SPA OPERATING INSTRUCTIONS ── */}
+          <Panel>
+            <Tag>Spa Operating Instructions</Tag>
+            <H2>How to Run the Spa</H2>
+            <Step n={1} title="Set valves to Spa Mode" desc="Switch Intake to Spa only (close Skimmer, Pool, Vac). Switch Return to Spa only (close Pool return)." />
+            <Step n={2} title="Select Program 4 on the pump" desc="On the IntelliFlo keypad, select Program 4 (3,450 RPM — Spa Mode). The pump must be running on Program 4 before turning on the heater." />
+            <Step n={3} title="Turn on the heater" desc="The heater can only be activated when Program 4 is running. Turn the heater on after confirming the pump is at full speed." />
+            <Step n={4} title="Allow time to heat" desc="The spa will take time to reach temperature depending on starting water temp. Stay nearby and monitor." />
+            <Step n={5} title="When finished — restore Pool Mode" desc="Turn off the heater first. Stop Program 4. Then switch all valves back to Pool Mode: open Skimmer, Pool, and Vac intake; open both Pool and Spa returns." />
+            <div style={{marginTop:16}}>
+              <Highlight>
+                <strong>⚠ Important:</strong> Never turn on the heater unless Program 4 is actively running. Running the heater without sufficient water flow can damage the heater. Always restore valves to Pool Mode when done.
+              </Highlight>
+            </div>
           </Panel>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:2}}>
